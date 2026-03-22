@@ -4,7 +4,8 @@
   --accent: #00d2ff;
   --text-main: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
-  --plyr-color-main: #00d2ff;
+  /* Video.js özel renkleri */
+  --vjs-theme-color: #00d2ff;
 }
 
 body {
@@ -13,19 +14,34 @@ body {
   color: var(--text-main); display: flex; height: 100vh; width: 100vw; overflow: hidden;
 }
 
-/* --- PLYR ENTEGRASYONU --- */
-.plyr {
-    height: 100%;
-    width: 100%;
+/* --- VIDEO.JS MODERN ENTEGRASYONU --- */
+.video-js {
+    width: 100% !important;
+    height: 100% !important;
     border-radius: 20px;
+    background-color: #000;
 }
 
-.player-box .plyr--video {
-    background: #000;
+/* Kontrol çubuğu özelleştirme */
+.vjs-default-skin .vjs-control-bar {
+    background: rgba(0, 0, 0, 0.7) !important;
+    backdrop-filter: blur(5px);
+    border-radius: 0 0 20px 20px;
 }
 
-.plyr--full-ui.plyr--video .plyr__control--overlaid {
-    background: rgba(0, 210, 255, 0.4);
+/* Play butonu ve vurgu rengi */
+.vjs-default-skin .vjs-big-play-button {
+    background-color: rgba(0, 210, 255, 0.4) !important;
+    border-color: var(--accent) !important;
+    border-radius: 50% !important;
+    width: 60px !important;
+    height: 60px !important;
+    line-height: 56px !important;
+}
+
+.vjs-default-skin .vjs-play-progress, 
+.vjs-default-skin .vjs-volume-level {
+    background-color: var(--accent) !important;
 }
 
 /* Hoşgeldin Mesajı Stili */
@@ -36,15 +52,17 @@ body {
 }
 
 /* --- SİNEMA MODU --- */
-body.cinema-mode .sidebar { width: 0 !important; min-width: 0 !important; opacity: 0; pointer-events: none; }
-body.cinema-mode .toggle-btn { display: none; } 
-body.cinema-mode .layout-header { display: none; }
+body.cinema-mode .sidebar,
+body.cinema-mode .toggle-btn,
+body.cinema-mode .layout-header { display: none !important; }
+
 body.cinema-mode .player-box:not(.active) { display: none; }
 body.cinema-mode .player-box.active { 
     width: 100vw; height: 100vh; position: fixed; 
     top: 0; left: 0; z-index: 999; border-radius: 0; border: none; 
-    max-width: none; max-height: none; /* Sinema modunda tam ekran */
+    max-width: none; max-height: none;
 }
+body.cinema-mode .video-js { border-radius: 0; }
 
 /* --- PLAYER GRİD --- */
 #players { 
@@ -53,8 +71,8 @@ body.cinema-mode .player-box.active {
     height: 100%; 
     transition: 0.4s; 
     flex-grow: 1; 
-    align-items: center; /* Kutuları dikeyde ortalar */
-    justify-items: center; /* Kutuları yatayda ortalar */
+    align-items: center; 
+    justify-items: center; 
 }
 
 .player-box { 
@@ -67,12 +85,11 @@ body.cinema-mode .player-box.active {
     cursor: pointer;
     width: 100%;
     height: 100%;
-    /* KUTU BOYUTU AYARI: Tekli ekranda çok büyük olmaması için sınır */
     max-width: 1100px; 
     max-height: 75vh;
 }
 
-/* Çoklu ekran modunda (2'li veya 4'lü) kutuların küçülmemesi için sınırları esnetiyoruz */
+/* Çoklu ekran modunda sınırları esnetme */
 #players:has(.player-box:nth-child(2)) .player-box {
     max-width: 100%;
     max-height: 100%;
@@ -81,9 +98,10 @@ body.cinema-mode .player-box.active {
 .player-box.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
 
 .player-info { 
-    position: absolute; bottom: 45px; left: 0; right: 0; 
-    background: linear-gradient(transparent, rgba(0,0,0,0.8)); 
-    padding: 20px 15px 10px; color: var(--accent); 
+    position: absolute; top: 15px; left: 15px; 
+    background: rgba(0,0,0,0.5); 
+    padding: 5px 12px; border-radius: 6px;
+    color: var(--accent); 
     font-size: 11px; font-weight: 700; z-index: 5; pointer-events: none; 
 }
 
@@ -101,7 +119,7 @@ body.cinema-mode .player-box.active {
     border-right: 1px solid var(--border); display: flex; flex-direction: column; 
     transition: 0.4s ease-in-out; position: relative; z-index: 1000; 
 }
-.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; }
+.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
 
 .toggle-btn { 
     position: fixed; left: 248px; top: 25px; 
@@ -132,35 +150,15 @@ body.cinema-mode .player-box.active {
 
 .main-content { 
     flex-grow: 1; display: flex; flex-direction: column; 
-    padding: 30px; /* Padding artırıldı, kutular otomatik küçüldü */
+    padding: 30px; 
     height: 100vh; box-sizing: border-box; 
 }
 .layout-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
 .layout-buttons button { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; margin-left: 8px; font-size: 12px; transition: 0.3s; }
 .layout-buttons button:hover { background: var(--accent); color: #000; }
 
-video { width: 100%; height: 100%; object-fit: contain; background: #000; }
-
 @media (max-width: 768px) {
-    .main-content { padding: 15px; } /* Mobilde çok daralmaması için padding azaldı */
-    
-    .player-box {
-        max-height: 40vh; /* Mobilde dikeyde çok yer kaplamasın */
-        cursor: pointer;
-        touch-action: manipulation;
-        z-index: 1;
-    }
-
-    .player-box.active {
-        z-index: 10;
-        border: 3px solid var(--accent) !important;
-    }
-
-    .player-info {
-        bottom: 55px;
-    }
-
-    .plyr__control {
-        padding: 12px !important;
-    }
+    .main-content { padding: 10px; }
+    .player-box { max-height: 35vh; }
+    .layout-buttons button { padding: 8px 10px; font-size: 10px; }
 }
