@@ -110,26 +110,26 @@ function selectPlayer(index) {
     document.getElementById("current-channel").innerText = activeName;
 }
 
-// YAYINI OYNATMA (Görüntü Sorunu Çözülmüş Versiyon)
+// YAYINI OYNATMA (Siyah Ekran Çözümlü)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
     const video = players[activePlayer];
     if (playerInfos[activePlayer]) playerInfos[activePlayer].innerText = name;
     
-    // Önceki yayınları tamamen temizle
-    if (hlsInstances[activePlayer]) {
-        hlsInstances[activePlayer].destroy();
-        hlsInstances[activePlayer] = null;
-    }
+    // Eski örnekleri tamamen temizle
     if (plyrInstances[activePlayer]) {
         plyrInstances[activePlayer].destroy();
         plyrInstances[activePlayer] = null;
     }
+    if (hlsInstances[activePlayer]) {
+        hlsInstances[activePlayer].destroy();
+        hlsInstances[activePlayer] = null;
+    }
 
-    // Siyah ekranı önlemek için video elementini sıfırla
+    // Video elementini donmayı önlemek için sıfırla
     video.pause();
-    video.removeAttribute('src');
+    video.src = "";
     video.load();
 
     const plyrOptions = {
@@ -141,26 +141,34 @@ function playStream(url, name = "Bilinmeyen Kanal") {
         const hls = new Hls({
             enableWorker: true,
             maxBufferLength: 10,
-            liveSyncDurationCount: 3
+            liveSyncDurationCount: 3,
+            backBufferLength: 0
         });
         
         hls.loadSource(url);
         hls.attachMedia(video);
-        
-        hls.on(Hls.Events.MANIFEST_PARSED, () => {
+        hlsInstances[activePlayer] = hls;
+
+        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
             const player = new Plyr(video, plyrOptions);
             plyrInstances[activePlayer] = player;
             
-            if (activePlayer === players.indexOf(video)) {
+            hls.on(Hls.Events.MANIFEST_PARSED, () => {
                 video.play().catch(() => {
                     video.muted = true;
                     video.play();
                 });
+            });
+        });
+
+        hls.on(Hls.Events.ERROR, (event, data) => {
+            if (data.fatal) {
+                if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
+                else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
             }
         });
 
-        hlsInstances[activePlayer] = hls;
-    } else {
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = url;
         const player = new Plyr(video, plyrOptions);
         plyrInstances[activePlayer] = player;
@@ -168,7 +176,7 @@ function playStream(url, name = "Bilinmeyen Kanal") {
     }
 }
 
-// EKRAN DÜZENİ
+// EKRAN DÜZENİ DEĞİŞTİRME
 function setLayout(count) { 
     activePlayer = 0; 
     createPlayers(count); 
