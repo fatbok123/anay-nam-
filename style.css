@@ -4,8 +4,8 @@
   --accent: #00d2ff;
   --text-main: #ffffff;
   --border: rgba(255, 255, 255, 0.08);
-  /* Video.js özel renkleri */
-  --vjs-theme-color: #00d2ff;
+  /* Plyr Teması İçin Renk Tanımı */
+  --plyr-color-main: #00d2ff;
 }
 
 body {
@@ -14,65 +14,59 @@ body {
   color: var(--text-main); display: flex; height: 100vh; width: 100vw; overflow: hidden;
 }
 
-/* --- VIDEO.JS MODERN ENTEGRASYONU --- */
-.video-js {
+/* --- PLYR MODERN TASARIM ÖZELLEŞTİRME --- */
+.plyr {
     width: 100% !important;
     height: 100% !important;
     border-radius: 20px;
-    background-color: #000;
+    background: #000 !important;
 }
 
-/* Kontrol çubuğu özelleştirme */
-.vjs-default-skin .vjs-control-bar {
-    background: rgba(0, 0, 0, 0.7) !important;
-    backdrop-filter: blur(5px);
+/* Player içindeki kontrol çubuğunu biraz daha şeffaf ve blur yapalım */
+.plyr--video .plyr__controls {
+    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7)) !important;
+    padding-top: 20px !important;
     border-radius: 0 0 20px 20px;
 }
 
-/* Play butonu ve vurgu rengi */
-.vjs-default-skin .vjs-big-play-button {
-    background-color: rgba(0, 210, 255, 0.4) !important;
-    border-color: var(--accent) !important;
-    border-radius: 50% !important;
-    width: 60px !important;
-    height: 60px !important;
-    line-height: 56px !important;
+/* Plyr buton hover renkleri */
+.plyr--video .plyr__control:hover {
+    background: var(--accent) !important;
+    color: #000 !important;
 }
 
-.vjs-default-skin .vjs-play-progress, 
-.vjs-default-skin .vjs-volume-level {
-    background-color: var(--accent) !important;
-}
-
-/* Hoşgeldin Mesajı Stili */
+/* Hoşgeldin Mesajı */
 .welcome-msg {
     display: flex; align-items: center; justify-content: center; 
-    height: 100%; width: 100%; color: rgba(255,255,255,0.2); 
-    font-weight: 900; font-size: 20px; letter-spacing: 2px;
+    height: 100%; width: 100%; color: rgba(255,255,255,0.1); 
+    font-weight: 900; font-size: 24px; letter-spacing: 3px;
+    text-align: center; padding: 20px;
 }
 
 /* --- SİNEMA MODU --- */
 body.cinema-mode .sidebar,
 body.cinema-mode .toggle-btn,
-body.cinema-mode .layout-header { display: none !important; }
+body.cinema-mode .layout-header,
+body.cinema-mode .top-ad-bar { display: none !important; }
 
 body.cinema-mode .player-box:not(.active) { display: none; }
 body.cinema-mode .player-box.active { 
     width: 100vw; height: 100vh; position: fixed; 
-    top: 0; left: 0; z-index: 999; border-radius: 0; border: none; 
+    top: 0; left: 0; z-index: 2000; border-radius: 0; border: none; 
     max-width: none; max-height: none;
 }
-body.cinema-mode .video-js { border-radius: 0; }
+body.cinema-mode .plyr { border-radius: 0; }
 
-/* --- PLAYER GRİD --- */
+/* --- PLAYER GRİD SİSTEMİ --- */
 #players { 
     display: grid; 
-    gap: 20px; 
+    gap: 15px; 
     height: 100%; 
     transition: 0.4s; 
     flex-grow: 1; 
     align-items: center; 
     justify-items: center; 
+    padding: 10px;
 }
 
 .player-box { 
@@ -81,7 +75,7 @@ body.cinema-mode .video-js { border-radius: 0; }
     border: 2px solid var(--border); 
     overflow: hidden; 
     position: relative; 
-    transition: 0.3s; 
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
     cursor: pointer;
     width: 100%;
     height: 100%;
@@ -89,76 +83,100 @@ body.cinema-mode .video-js { border-radius: 0; }
     max-height: 75vh;
 }
 
-/* Çoklu ekran modunda sınırları esnetme */
+/* Çoklu ekran seçildiğinde kutuları büyüt */
 #players:has(.player-box:nth-child(2)) .player-box {
     max-width: 100%;
     max-height: 100%;
 }
 
-.player-box.active { border-color: var(--accent); box-shadow: 0 0 15px rgba(0, 210, 255, 0.2); }
+.player-box.active { 
+    border-color: var(--accent); 
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15); 
+}
 
 .player-info { 
     position: absolute; top: 15px; left: 15px; 
-    background: rgba(0,0,0,0.5); 
-    padding: 5px 12px; border-radius: 6px;
+    background: rgba(8, 10, 18, 0.7); 
+    backdrop-filter: blur(4px);
+    padding: 6px 14px; border-radius: 8px;
     color: var(--accent); 
-    font-size: 11px; font-weight: 700; z-index: 5; pointer-events: none; 
+    font-size: 10px; font-weight: 800; z-index: 10; pointer-events: none; 
+    border: 1px solid var(--border);
+    letter-spacing: 1px;
 }
 
 .pip-btn { 
     position: absolute; top: 12px; right: 12px; 
     background: rgba(0,0,0,0.5); border: 1px solid var(--accent); 
     color: var(--accent); width: 32px; height: 32px; border-radius: 8px; 
-    cursor: pointer; z-index: 10; backdrop-filter: blur(5px); 
+    cursor: pointer; z-index: 15; backdrop-filter: blur(5px); 
+    transition: 0.2s;
 }
+.pip-btn:hover { background: var(--accent); color: #000; }
 
 /* --- SİDEBAR --- */
 .sidebar { 
     width: 260px; min-width: 260px; height: 100vh;
-    background: var(--sidebar-bg); backdrop-filter: blur(10px); 
+    background: var(--sidebar-bg); backdrop-filter: blur(15px); 
     border-right: 1px solid var(--border); display: flex; flex-direction: column; 
-    transition: 0.4s ease-in-out; position: relative; z-index: 1000; 
+    transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 1000; 
 }
-.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; }
+.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; }
 
 .toggle-btn { 
     position: fixed; left: 248px; top: 25px; 
     background: var(--accent); border: none; width: 28px; height: 28px; 
     border-radius: 50%; cursor: pointer; z-index: 1005; 
     transition: all 0.4s ease-in-out; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.4); font-size: 14px; color: #000;
+    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); font-size: 14px; color: #000;
 }
-
 .sidebar.collapsed ~ .toggle-btn { left: 15px; transform: rotate(180deg); }
 
-.header { padding: 25px 20px 15px; font-size: 20px; font-weight: 900; flex-shrink: 0; }
+.header { padding: 30px 20px 20px; font-size: 22px; font-weight: 900; letter-spacing: -1px; }
 .header span { color: var(--accent); }
+
 #search { 
-    width: 85%; background: rgba(255,255,255,0.05); 
-    border: 1px solid var(--border); border-radius: 10px; 
-    padding: 12px; color: white; margin: 0 auto 15px; outline: none; flex-shrink: 0; 
+    width: 85%; background: rgba(255,255,255,0.03); 
+    border: 1px solid var(--border); border-radius: 12px; 
+    padding: 12px 15px; color: white; margin: 0 auto 20px; outline: none; transition: 0.3s;
 }
+#search:focus { border-color: var(--accent); background: rgba(0, 210, 255, 0.05); }
 
 #channels { flex-grow: 1; overflow-y: auto; padding: 10px; }
-#channels::-webkit-scrollbar { width: 4px; }
-#channels::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+#channels::-webkit-scrollbar { width: 3px; }
+#channels::-webkit-scrollbar-thumb { background: var(--accent); }
 
-.channel { padding: 12px; margin: 0 5px 8px; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: 0.2s; border: 1px solid transparent; }
-.channel:hover, .channel.selected-chan { background: rgba(0, 210, 255, 0.1); border-color: var(--accent); }
-.channel-logo { width: 36px; height: 36px; background: #111420; border-radius: 8px; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
-.channel-logo img { width: 85%; object-fit: contain; }
+.channel { padding: 14px; margin: 0 8px 10px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; border: 1px solid transparent; }
+.channel:hover, .channel.selected-chan { background: rgba(0, 210, 255, 0.08); border-color: rgba(0, 210, 255, 0.3); }
+.channel.selected-chan { background: rgba(0, 210, 255, 0.15); border-color: var(--accent); }
+
+.channel-logo { width: 40px; height: 40px; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
+.channel-logo img { width: 80%; height: 80%; object-fit: contain; }
 
 .main-content { 
     flex-grow: 1; display: flex; flex-direction: column; 
-    padding: 30px; 
+    padding: 20px 30px; 
     height: 100vh; box-sizing: border-box; 
 }
-.layout-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-.layout-buttons button { background: rgba(255,255,255,0.05); border: 1px solid var(--border); color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; margin-left: 8px; font-size: 12px; transition: 0.3s; }
-.layout-buttons button:hover { background: var(--accent); color: #000; }
+
+.layout-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+.status { display: flex; align-items: center; gap: 15px; }
+.live-indicator { color: #ff4b2b; font-weight: 900; font-size: 11px; animation: blink 1.5s infinite; }
+
+@keyframes blink { 50% { opacity: 0.3; } }
+
+.layout-buttons button { 
+    background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
+    color: white; padding: 10px 18px; border-radius: 12px; cursor: pointer; 
+    margin-left: 8px; font-size: 13px; font-weight: 600; transition: 0.3s; 
+}
+.layout-buttons button:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
+.layout-buttons button.special-btn { border-color: var(--accent); color: var(--accent); }
 
 @media (max-width: 768px) {
-    .main-content { padding: 10px; }
-    .player-box { max-height: 35vh; }
-    .layout-buttons button { padding: 8px 10px; font-size: 10px; }
+    .main-content { padding: 15px; }
+    .player-box { max-height: 30vh; border-radius: 15px; }
+    .layout-header { flex-direction: column; gap: 15px; align-items: flex-start; }
+    .layout-buttons { width: 100%; display: flex; gap: 5px; }
+    .layout-buttons button { flex: 1; margin: 0; padding: 10px 5px; font-size: 11px; }
 }
