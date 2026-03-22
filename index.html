@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="referrer" content="no-referrer">
+    <title>FATBOK TV - PRO PLAYER</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body { margin: 0; background: #000; color: #0f0; font-family: sans-serif; text-align: center; }
+        #video-container { width: 80%; margin: 20px auto; border: 2px solid #0f0; box-shadow: 0 0 15px #0f0; }
+        video { width: 100%; display: block; }
+        input { padding: 10px; width: 300px; background: #111; color: #0f0; border: 1px solid #0f0; }
+        button { padding: 10px 20px; background: #0f0; color: #000; font-weight: bold; cursor: pointer; border: none; }
+    </style>
+</head>
+<body>
+    <h1>FATBOK <span style="color:white">TV PRO</span></h1>
+    <div id="video-container">
+        <video id="video" controls autoplay></video>
+    </div>
+    <div style="margin-top: 20px;">
+        <input type="text" id="idInput" placeholder="Sadece ID gir (Örn: 500001735)">
+        <button onclick="playStream()">YAYINI BAŞLAT</button>
+    </div>
+
+    <script>
+        function playStream() {
+            const id = document.getElementById('idInput').value;
+            const video = document.getElementById('video');
+            // m3u8 dosyasını direkt çekmeye çalışıyoruz
+            const streamUrl = `https://s1.embedsport.live/tv/?id=${id}`;
+
+            if (Hls.isSupported()) {
+                const hls = new Hls();
+                hls.loadSource(streamUrl);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function() {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = streamUrl;
+                video.play();
+            }
+        }
+    </script>
+</body>
+</html>
