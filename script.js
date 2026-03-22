@@ -12,7 +12,8 @@ setInterval(function() {
 // --- KORUMA KODLARI BİTİŞ ---
 
 let activePlayer = 0;
-let players = []; // Video.js instance'larını tutacak
+let players = []; // Plyr instance'larını tutacak
+let hlsInstances = []; // HLS motorlarını kontrol etmek için
 let playerInfos = [];
 
 // SİDEBAR AÇMA/KAPAMA
@@ -30,12 +31,12 @@ function toggleCinemaMode() {
     btn.innerText = document.body.classList.contains("cinema-mode") ? "Işıkları Aç" : "Sinema Modu";
 }
 
-// RESİM İÇİNDE RESİM (PiP) - Video.js Uyumlu
+// RESİM İÇİNDE RESİM (PiP) - Plyr Uyumlu
 async function togglePiP(index) {
     const player = players[index];
     if (!player) return;
     
-    const video = player.tech().el(); // Video.js içindeki gerçek video elementini yakalar
+    const video = player.media; // Plyr içindeki video elementi
     try {
         if (video !== document.pictureInPictureElement) await video.requestPictureInPicture();
         else await document.exitPictureInPicture();
@@ -47,9 +48,12 @@ function createPlayers(count) {
     const container = document.getElementById("players");
     container.innerHTML = ""; 
     
-    // Eski player'ları bellekten temizle
-    players.forEach(p => p && p.dispose());
+    // Eski player'ları ve motorları temizle (Bellek yönetimi)
+    players.forEach(p => p && p.destroy());
+    hlsInstances.forEach(h => h && h.destroy());
+    
     players = [];
+    hlsInstances = [];
     playerInfos = [];
 
     const isMobile = window.innerWidth <= 768;
@@ -83,33 +87,25 @@ function createPlayers(count) {
 
         box.onclick = () => selectPlayer(i);
         
-        // Video.js Elementi
+        // Video Elementi
         const videoEl = document.createElement("video");
-        videoEl.id = `vjs-player-${i}`;
-        videoEl.className = "video-js vjs-default-skin vjs-big-play-centered";
+        videoEl.id = `plyr-player-${i}`;
         videoEl.setAttribute('playsinline', '');
         videoEl.setAttribute('webkit-playsinline', '');
+        if (i !== activePlayer) videoEl.muted = true;
 
         box.appendChild(videoEl);
         container.appendChild(box);
 
-        // Video.js Başlat (HLS optimizasyonları dahil)
-        const p = videojs(videoEl.id, {
-            fluid: true,
-            controls: true,
-            autoplay: false, // İlk kanal seçildiğinde tetiklenecek
-            muted: (i !== activePlayer),
-            html5: {
-                hls: {
-                    overrideNative: true, // Safari dahil hls.js motorunu zorla
-                    enableWorker: true,
-                    lowRebufferDelay: 10,
-                    handleNetworkErrors: true
-                }
-            }
+        // Plyr Başlat
+        const p = new Plyr(videoEl, {
+            controls: ['play-large', 'play', 'progress', 'current-time', 'mute', 'volume', 'fullscreen'],
+            keyboard: { focused: true, global: false },
+            tooltips: { controls: true, seek: true }
         });
 
         players.push(p);
+        hlsInstances.push(null);
     }
 }
 
@@ -119,34 +115,45 @@ function selectPlayer(index) {
     document.querySelectorAll(".player-box").forEach((el, i) => {
         el.classList.toggle("active", i === index);
         if (players[i]) {
-            // Sadece seçili player'ın sesini aç
-            players[i].muted(i !== index);
+            players[i].muted = (i !== index);
         }
     });
     const activeName = playerInfos[index] ? playerInfos[index].innerText : "Yayın Merkezi";
     document.getElementById("current-channel").innerText = activeName;
 }
 
-// YAYINI OYNATMA (Video.js Versiyonu)
+// YAYINI OYNATMA (Plyr + HLS.js Versiyonu)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
     const player = players[activePlayer];
+    const video = player.media;
+    
     if (playerInfos[activePlayer]) playerInfos[activePlayer].innerText = name;
     
-    // Kaynağı yükle ve oynat
-    player.src({
-        src: url,
-        type: 'application/x-mpegURL'
-    });
-    
-    player.ready(function() {
-        player.play().catch(() => {
-            console.log("Autoplay engellendi, sessiz modda başlatılıyor...");
-            player.muted(true);
+    // Varsa eski HLS instance'ı yok et
+    if (hlsInstances[activePlayer]) {
+        hlsInstances[activePlayer].destroy();
+    }
+
+    if (Hls.isSupported()) {
+        const hls = new Hls({
+            maxBufferLength: 10,
+            enableWorker: true,
+            lowRebufferDelay: 10
+        });
+        hls.loadSource(url);
+        hls.attachMedia(video);
+        hlsInstances[activePlayer] = hls;
+        
+        hls.on(Hls.Events.MANIFEST_PARSED, () => {
             player.play();
         });
-    });
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        // iOS Safari desteği
+        video.src = url;
+        player.play();
+    }
 }
 
 // EKRAN DÜZENİ DEĞİŞTİRME
@@ -155,7 +162,7 @@ function setLayout(count) {
     createPlayers(count); 
 }
 
-// KANAL LİSTESİ
+// KANAL LİSTESİ (Aynı Kalıyor)
 const channels = [
     { name: "Real Madrid - Atletico Madrid", logo: "https://image.hurimg.com/i/hurriyet/90/0x0/69bfb0415b06fcb7fa3239d6.jpg", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/s-sport.m3u8" },
     { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
