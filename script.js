@@ -14,7 +14,7 @@ setInterval(function() {
 let activePlayer = 0;
 let players = [];
 let hlsInstances = [];
-let plyrInstances = []; // Plyr örnekleri için yeni dizi
+let plyrInstances = []; 
 let playerInfos = [];
 
 // SİDEBAR AÇMA/KAPAMA
@@ -34,7 +34,6 @@ function toggleCinemaMode() {
 
 // RESİM İÇİNDE RESİM (PiP)
 async function togglePiP(index) {
-    // Plyr üzerinden PiP kontrolü daha sağlıklıdır
     if (plyrInstances[index]) {
         plyrInstances[index].pip = !plyrInstances[index].pip;
     }
@@ -46,7 +45,6 @@ function createPlayers(count) {
     container.innerHTML = ""; 
     players = [];
     
-    // Eski örnekleri temizle (Bellek sızıntısını önler)
     hlsInstances.forEach(h => h && h.destroy());
     plyrInstances.forEach(p => p && p.destroy());
     
@@ -104,7 +102,6 @@ function selectPlayer(index) {
     activePlayer = index;
     document.querySelectorAll(".player-box").forEach((el, i) => {
         el.classList.toggle("active", i === index);
-        // Sadece aktif player'ın sesini aç, diğerlerini sustur
         if (plyrInstances[i]) {
             plyrInstances[i].muted = (i !== index);
         }
@@ -113,23 +110,31 @@ function selectPlayer(index) {
     document.getElementById("current-channel").innerText = activeName;
 }
 
-// YAYINI OYNATMA (PLYR + HLS.JS ENTEGRESİ)
+// YAYINI OYNATMA (Görüntü Sorunu Çözülmüş Versiyon)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
     const video = players[activePlayer];
     if (playerInfos[activePlayer]) playerInfos[activePlayer].innerText = name;
     
-    // Mevcut yayını temizle
-    if (hlsInstances[activePlayer]) hlsInstances[activePlayer].destroy();
-    if (plyrInstances[activePlayer]) plyrInstances[activePlayer].destroy();
+    // Önceki yayınları tamamen temizle
+    if (hlsInstances[activePlayer]) {
+        hlsInstances[activePlayer].destroy();
+        hlsInstances[activePlayer] = null;
+    }
+    if (plyrInstances[activePlayer]) {
+        plyrInstances[activePlayer].destroy();
+        plyrInstances[activePlayer] = null;
+    }
 
-    // Plyr Ayarları
+    // Siyah ekranı önlemek için video elementini sıfırla
+    video.pause();
+    video.removeAttribute('src');
+    video.load();
+
     const plyrOptions = {
         controls: ['play-large', 'play', 'mute', 'volume', 'current-time', 'fullscreen', 'pip'],
-        keyboard: { focused: true, global: false },
-        tooltips: { controls: true, seek: true },
-        displayDuration: true
+        keyboard: { focused: true, global: false }
     };
 
     if (Hls.isSupported()) {
@@ -142,40 +147,34 @@ function playStream(url, name = "Bilinmeyen Kanal") {
         hls.loadSource(url);
         hls.attachMedia(video);
         
-        // Plyr'ı başlat
-        const player = new Plyr(video, plyrOptions);
-        
         hls.on(Hls.Events.MANIFEST_PARSED, () => {
+            const player = new Plyr(video, plyrOptions);
+            plyrInstances[activePlayer] = player;
+            
             if (activePlayer === players.indexOf(video)) {
-                video.play().catch(() => console.log("Etkileşim bekleniyor..."));
-            }
-        });
-
-        // Hata yönetimi
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-                else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
+                video.play().catch(() => {
+                    video.muted = true;
+                    video.play();
+                });
             }
         });
 
         hlsInstances[activePlayer] = hls;
-        plyrInstances[activePlayer] = player;
     } else {
-        // Native destek (iOS Safari)
         video.src = url;
         const player = new Plyr(video, plyrOptions);
         plyrInstances[activePlayer] = player;
+        video.play();
     }
 }
 
-// EKRAN DÜZENİ DEĞİŞTİRME
+// EKRAN DÜZENİ
 function setLayout(count) { 
     activePlayer = 0; 
     createPlayers(count); 
 }
 
-// KANAL LİSTESİ (DOKUNULMADI)
+// KANAL LİSTESİ
 const channels = [
     { name: "Real Madrid - Atletico Madrid", logo: "https://image.hurimg.com/i/hurriyet/90/0x0/69bfb0415b06fcb7fa3239d6.jpg", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/s-sport.m3u8" },
     { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
