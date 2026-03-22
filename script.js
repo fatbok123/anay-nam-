@@ -12,9 +12,7 @@ setInterval(function() {
 // --- KORUMA KODLARI BİTİŞ ---
 
 let activePlayer = 0;
-let players = [];
-let hlsInstances = [];
-let plyrInstances = []; 
+let players = []; // Video.js instance'larını tutacak
 let playerInfos = [];
 
 // SİDEBAR AÇMA/KAPAMA
@@ -32,24 +30,26 @@ function toggleCinemaMode() {
     btn.innerText = document.body.classList.contains("cinema-mode") ? "Işıkları Aç" : "Sinema Modu";
 }
 
-// RESİM İÇİNDE RESİM (PiP)
+// RESİM İÇİNDE RESİM (PiP) - Video.js Uyumlu
 async function togglePiP(index) {
-    if (plyrInstances[index]) {
-        plyrInstances[index].pip = !plyrInstances[index].pip;
-    }
+    const player = players[index];
+    if (!player) return;
+    
+    const video = player.tech().el(); // Video.js içindeki gerçek video elementini yakalar
+    try {
+        if (video !== document.pictureInPictureElement) await video.requestPictureInPicture();
+        else await document.exitPictureInPicture();
+    } catch (error) { console.error("PiP Hatası:", error); }
 }
 
 // PLAYER KUTULARINI OLUŞTURMA
 function createPlayers(count) {
     const container = document.getElementById("players");
     container.innerHTML = ""; 
+    
+    // Eski player'ları bellekten temizle
+    players.forEach(p => p && p.dispose());
     players = [];
-    
-    hlsInstances.forEach(h => h && h.destroy());
-    plyrInstances.forEach(p => p && p.destroy());
-    
-    hlsInstances = [];
-    plyrInstances = [];
     playerInfos = [];
 
     const isMobile = window.innerWidth <= 768;
@@ -83,17 +83,33 @@ function createPlayers(count) {
 
         box.onclick = () => selectPlayer(i);
         
-        const video = document.createElement("video");
-        video.playsInline = true;
-        video.setAttribute('webkit-playsinline', ''); 
-        video.muted = (i !== activePlayer);
-        
-        box.appendChild(video);
+        // Video.js Elementi
+        const videoEl = document.createElement("video");
+        videoEl.id = `vjs-player-${i}`;
+        videoEl.className = "video-js vjs-default-skin vjs-big-play-centered";
+        videoEl.setAttribute('playsinline', '');
+        videoEl.setAttribute('webkit-playsinline', '');
+
+        box.appendChild(videoEl);
         container.appendChild(box);
-        
-        players.push(video);
-        hlsInstances.push(null);
-        plyrInstances.push(null);
+
+        // Video.js Başlat (HLS optimizasyonları dahil)
+        const p = videojs(videoEl.id, {
+            fluid: true,
+            controls: true,
+            autoplay: false, // İlk kanal seçildiğinde tetiklenecek
+            muted: (i !== activePlayer),
+            html5: {
+                hls: {
+                    overrideNative: true, // Safari dahil hls.js motorunu zorla
+                    enableWorker: true,
+                    lowRebufferDelay: 10,
+                    handleNetworkErrors: true
+                }
+            }
+        });
+
+        players.push(p);
     }
 }
 
@@ -102,78 +118,35 @@ function selectPlayer(index) {
     activePlayer = index;
     document.querySelectorAll(".player-box").forEach((el, i) => {
         el.classList.toggle("active", i === index);
-        if (plyrInstances[i]) {
-            plyrInstances[i].muted = (i !== index);
+        if (players[i]) {
+            // Sadece seçili player'ın sesini aç
+            players[i].muted(i !== index);
         }
     });
     const activeName = playerInfos[index] ? playerInfos[index].innerText : "Yayın Merkezi";
     document.getElementById("current-channel").innerText = activeName;
 }
 
-// YAYINI OYNATMA (Siyah Ekran Çözümlü)
+// YAYINI OYNATMA (Video.js Versiyonu)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
-    const video = players[activePlayer];
+    const player = players[activePlayer];
     if (playerInfos[activePlayer]) playerInfos[activePlayer].innerText = name;
     
-    // Eski örnekleri tamamen temizle
-    if (plyrInstances[activePlayer]) {
-        plyrInstances[activePlayer].destroy();
-        plyrInstances[activePlayer] = null;
-    }
-    if (hlsInstances[activePlayer]) {
-        hlsInstances[activePlayer].destroy();
-        hlsInstances[activePlayer] = null;
-    }
-
-    // Video elementini donmayı önlemek için sıfırla
-    video.pause();
-    video.src = "";
-    video.load();
-
-    const plyrOptions = {
-        controls: ['play-large', 'play', 'mute', 'volume', 'current-time', 'fullscreen', 'pip'],
-        keyboard: { focused: true, global: false }
-    };
-
-    if (Hls.isSupported()) {
-        const hls = new Hls({
-            enableWorker: true,
-            maxBufferLength: 10,
-            liveSyncDurationCount: 3,
-            backBufferLength: 0
+    // Kaynağı yükle ve oynat
+    player.src({
+        src: url,
+        type: 'application/x-mpegURL'
+    });
+    
+    player.ready(function() {
+        player.play().catch(() => {
+            console.log("Autoplay engellendi, sessiz modda başlatılıyor...");
+            player.muted(true);
+            player.play();
         });
-        
-        hls.loadSource(url);
-        hls.attachMedia(video);
-        hlsInstances[activePlayer] = hls;
-
-        hls.on(Hls.Events.MEDIA_ATTACHED, () => {
-            const player = new Plyr(video, plyrOptions);
-            plyrInstances[activePlayer] = player;
-            
-            hls.on(Hls.Events.MANIFEST_PARSED, () => {
-                video.play().catch(() => {
-                    video.muted = true;
-                    video.play();
-                });
-            });
-        });
-
-        hls.on(Hls.Events.ERROR, (event, data) => {
-            if (data.fatal) {
-                if (data.type === Hls.ErrorTypes.NETWORK_ERROR) hls.startLoad();
-                else if (data.type === Hls.ErrorTypes.MEDIA_ERROR) hls.recoverMediaError();
-            }
-        });
-
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = url;
-        const player = new Plyr(video, plyrOptions);
-        plyrInstances[activePlayer] = player;
-        video.play();
-    }
+    });
 }
 
 // EKRAN DÜZENİ DEĞİŞTİRME
