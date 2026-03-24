@@ -24,12 +24,24 @@ function toggleSidebar() {
     toggleBtn.innerText = sidebar.classList.contains("collapsed") ? "▶" : "◀";
 }
 
-// SİNEMA MODU
+// SİNEMA MODU (GÜNCELLENDİ)
 function toggleCinemaMode() {
     document.body.classList.toggle("cinema-mode");
     const btn = document.getElementById("cinema-btn");
-    btn.innerText = document.body.classList.contains("cinema-mode") ? "Işıkları Aç" : "Sinema Modu";
+    
+    if (document.body.classList.contains("cinema-mode")) {
+        btn.innerText = "Normal Moda Dön"; // Sinemadayken bu yazacak
+    } else {
+        btn.innerText = "Sinema Modu"; // Çıkınca eski haline dönecek
+    }
 }
+
+// ESC TUŞU İLE ÇIKIŞ (EKSTRA KOLAYLIK)
+document.addEventListener('keydown', function(e) {
+    if (e.key === "Escape" && document.body.classList.contains("cinema-mode")) {
+        toggleCinemaMode();
+    }
+});
 
 // PiP DESTEĞİ
 async function togglePiP(index) {
@@ -162,7 +174,7 @@ function setLayout(count) {
     createPlayers(count); 
 }
 
-// KANAL VERİLERİ
+// KANAL VERİLERİ (HİÇ DOKUNULMADI)
 const channels = [
     { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
     { name: "Bein Sports 2", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
