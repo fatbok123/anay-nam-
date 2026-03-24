@@ -52,14 +52,14 @@ body.cinema-mode .layout-buttons button:not(#cinema-btn) {
     display: none !important; 
 }
 
-/* Header'ı komple silme, butonun görünmesi için alanı koru */
+/* Header alanını buton için koru */
 body.cinema-mode .layout-header {
     margin: 0;
     padding: 0;
     border: none;
 }
 
-/* Butonu sağ üstte sabitle */
+/* Çıkış Butonu Sabitleme */
 body.cinema-mode #cinema-btn {
     display: block !important;
     position: fixed;
@@ -71,6 +71,14 @@ body.cinema-mode #cinema-btn {
     font-weight: 800;
     box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
     border: none;
+}
+
+/* PiP Butonunu Sinema Modunda Aşağı Kaydır (Üst üste binmemesi için) */
+body.cinema-mode .pip-btn {
+    top: 80px !important; 
+    right: 25px !important;
+    z-index: 5001;
+    background: rgba(0, 0, 0, 0.8) !important;
 }
 
 body.cinema-mode .player-box:not(.active) { display: none; }
