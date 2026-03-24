@@ -43,11 +43,25 @@ body {
     text-align: center; padding: 20px;
 }
 
-/* --- SİNEMA MODU --- */
+/* --- SİNEMA MODU (GÜNCELLENDİ) --- */
 body.cinema-mode .sidebar,
 body.cinema-mode .toggle-btn,
 body.cinema-mode .layout-header,
 body.cinema-mode .top-ad-bar { display: none !important; }
+
+/* Sinema modunda butonu sağ üstte sabitle ve göster */
+body.cinema-mode #cinema-btn {
+    display: block !important;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 5000;
+    background: var(--accent);
+    color: #000;
+    font-weight: 800;
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+    border: none;
+}
 
 body.cinema-mode .player-box:not(.active) { display: none; }
 body.cinema-mode .player-box.active { 
