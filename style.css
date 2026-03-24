@@ -46,20 +46,30 @@ body {
 /* --- SİNEMA MODU (GÜNCELLENDİ) --- */
 body.cinema-mode .sidebar,
 body.cinema-mode .toggle-btn,
-body.cinema-mode .layout-header,
-body.cinema-mode .top-ad-bar { display: none !important; }
+body.cinema-mode .top-ad-bar,
+body.cinema-mode .layout-header .status,
+body.cinema-mode .layout-buttons button:not(#cinema-btn) { 
+    display: none !important; 
+}
 
-/* Sinema modunda butonu sağ üstte sabitle ve göster */
+/* Header'ı komple silme, butonun görünmesi için alanı koru */
+body.cinema-mode .layout-header {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+/* Butonu sağ üstte sabitle */
 body.cinema-mode #cinema-btn {
     display: block !important;
     position: fixed;
     top: 20px;
     right: 20px;
     z-index: 5000;
-    background: var(--accent);
-    color: #000;
+    background: var(--accent) !important;
+    color: #000 !important;
     font-weight: 800;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.5);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
     border: none;
 }
 
