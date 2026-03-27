@@ -30,13 +30,13 @@ function toggleCinemaMode() {
     const btn = document.getElementById("cinema-btn");
     
     if (document.body.classList.contains("cinema-mode")) {
-        btn.innerText = "Normal Moda Dön"; // Sinemadayken bu yazacak
+        btn.innerText = "Normal Moda Dön"; 
     } else {
-        btn.innerText = "Sinema Modu"; // Çıkınca eski haline dönecek
+        btn.innerText = "Sinema Modu"; 
     }
 }
 
-// ESC TUŞU İLE ÇIKIŞ (EKSTRA KOLAYLIK)
+// ESC TUŞU İLE ÇIKIŞ
 document.addEventListener('keydown', function(e) {
     if (e.key === "Escape" && document.body.classList.contains("cinema-mode")) {
         toggleCinemaMode();
@@ -54,7 +54,7 @@ async function togglePiP(index) {
     } catch (error) { console.error("PiP Hatası:", error); }
 }
 
-// PLAYER OLUŞTURMA (Dinamik & Stabil)
+// PLAYER OLUŞTURMA
 function createPlayers(count) {
     const container = document.getElementById("players");
     container.innerHTML = ""; 
@@ -77,6 +77,7 @@ function createPlayers(count) {
     for (let i = 0; i < count; i++) {
         const box = document.createElement("div");
         box.className = `player-box ${i === activePlayer ? 'active' : ''}`;
+        box.id = `box-${i}`;
         box.dataset.index = i;
         
         const info = document.createElement("div");
@@ -124,19 +125,40 @@ function selectPlayer(index) {
     document.getElementById("current-channel").innerText = activeName;
 }
 
-// CANLI YAYIN BAŞLATMA (HLS.js Optimize)
+// CANLI YAYIN BAŞLATMA (HLS + EMBED DESTEĞİ)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
     const player = players[activePlayer];
+    const box = document.getElementById(`box-${activePlayer}`);
     const video = player.media;
     
     if (playerInfos[activePlayer]) playerInfos[activePlayer].innerText = name.toUpperCase();
     
-    if (hlsInstances[activePlayer]) {
-        hlsInstances[activePlayer].destroy();
+    // Varsa eski hls ve iframe'leri temizle
+    if (hlsInstances[activePlayer]) hlsInstances[activePlayer].destroy();
+    const oldIframe = box.querySelector('iframe');
+    if (oldIframe) oldIframe.remove();
+    video.style.display = "block"; 
+    box.querySelector('.plyr').style.display = "block";
+
+    // --- EMBED KONTROLÜ ---
+    // Link .m3u8 içermiyorsa veya özel embed domainleri içeriyorsa iframe açar
+    if (!url.includes(".m3u8") || url.includes("aapmains.net")) {
+        video.style.display = "none"; 
+        box.querySelector('.plyr').style.display = "none";
+        
+        const iframe = document.createElement("iframe");
+        iframe.src = url;
+        iframe.style.width = "100%";
+        iframe.style.height = "100%";
+        iframe.style.border = "none";
+        iframe.allow = "autoplay; fullscreen";
+        box.appendChild(iframe);
+        return; 
     }
 
+    // --- NORMAL HLS (M3U8) KONTROLÜ ---
     if (Hls.isSupported()) {
         const hls = new Hls({
             maxBufferLength: 30,
@@ -174,22 +196,23 @@ function setLayout(count) {
     createPlayers(count); 
 }
 
-// KANAL VERİLERİ (HİÇ DOKUNULMADI)
+// KANAL VERİLERİ (İtalya-Kuzey İrlanda GÜNCELLENDİ)
 const channels = [
-    { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
+    { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
+    { name: "Bein Sports 1 (YEDEK)", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://curly-fire-b7a1.bestlivever.workers.dev/watch/chunk/yayinz.m3u8" },
     { name: "Bein Sports 2", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
-    { name: "Bein Sports 2 (YEDEK)", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xbeinsports-2/playlist.m3u8" },
-    { name: "Bein Sports 3", logo: "https://trgooltv61.top/img/beinsports3.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-3.m3u8" },
+    { name: "Bein Sports 2 (YEDEK)", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
+    { name: "Bein Sports 3", logo: "https://trgooltv61.top/img/beinsports3.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-3.m3u8" },
     { name: "Bein Sports 4", logo: "https://trgooltv61.top/img/beinsports4.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-4.m3u8" },
-    { name: "Bein Sports 5", logo: "https://trgooltv61.top/img/beinsports5.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-5.m3u8" },
+    { name: "Bein Sports 5", logo: "https://trgooltv61.top/img/beinsports5.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-5.m3u8" },
     { name: "Bein Sports Max 1", logo: "https://trgooltv61.top/img/beinsportsmax1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-max-1.m3u8" },
     { name: "Bein Sports Max 1 (YEDEK)", logo: "https://trgooltv61.top/img/beinsportsmax1.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xbeinsportsmax-1/playlist.m3u8" },
     { name: "Bein Sports Max 2", logo: "https://trgooltv61.top/img/beinsportsmax2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-max-2.m3u8" },
     { name: "Tivibu Spor 1", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xtivibuspor-1/playlist.m3u8" },
     { name: "Tivibu Spor 2", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-2.m3u8" },
     { name: "Tivibu Spor 3", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-3.m3u8" },
-    { name: "S Sport", logo: "https://www.trgoals125.top/lib/img/channels/s-sport.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/s-sport.m3u8" },
-    { name: "S Sport 2", logo: "https://www.trgoals125.top/lib/img/channels/s-sport-2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/s-sport-2.m3u8" },
+    { name: "S Sport", logo: "https://www.trgoals125.top/lib/img/channels/s-sport.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess1.m3u8" },
+    { name: "S Sport 2", logo: "https://www.trgoals125.top/lib/img/channels/s-sport-2.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess2.m3u8" },
     { name: "S Sport 2 (YEDEK)", logo: "https://www.trgoals125.top/lib/img/channels/s-sport-2.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xssport2/playlist.m3u8" },
     { name: "Tabii Spor", logo: "", url: "https://kl9mr2vxw7nq5py1sh4tj3gb6.medya.trt.com.tr/master_1080p.m3u8" },
     { name: "Tabii Spor 1", logo: "", url: "https://pz4qt7nw1mr9sh2vl5xk8jg3y.medya.trt.com.tr/master.m3u8" },
