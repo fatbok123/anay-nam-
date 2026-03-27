@@ -1,214 +1,146 @@
 :root {
-  --bg-dark: #080a12;
-  --sidebar-bg: rgba(15, 18, 26, 0.95);
-  --accent: #00d2ff;
-  --text-main: #ffffff;
-  --border: rgba(255, 255, 255, 0.08);
-  /* Plyr Teması İçin Renk Tanımı */
-  --plyr-color-main: #00d2ff;
+    --bg-dark: #080a12;
+    --sidebar-bg: rgba(10, 12, 18, 0.98);
+    --accent: #00ff00; /* Senin imza rengin: Neon Yeşil */
+    --text-main: #ffffff;
+    --border: rgba(255, 255, 255, 0.08);
+    --plyr-color-main: #00ff00;
 }
 
 body {
-  margin: 0; font-family: 'Inter', sans-serif;
-  background: radial-gradient(circle at 50% 50%, #1a1f35 0%, #080a12 100%);
-  color: var(--text-main); display: flex; height: 100vh; width: 100vw; overflow: hidden;
+    margin: 0; font-family: 'Inter', sans-serif;
+    background: radial-gradient(circle at 50% 50%, #121520 0%, #05060a 100%);
+    color: var(--text-main); display: flex; height: 100vh; width: 100vw; overflow: hidden;
 }
 
-/* --- PLYR MODERN TASARIM ÖZELLEŞTİRME --- */
+/* --- PLYR MODERN TASARIM --- */
 .plyr {
-    width: 100% !important;
-    height: 100% !important;
-    border-radius: 20px;
-    background: #000 !important;
+    width: 100% !important; height: 100% !important;
+    border-radius: 15px; background: #000 !important;
 }
-
-/* Player içindeki kontrol çubuğunu biraz daha şeffaf ve blur yapalım */
 .plyr--video .plyr__controls {
-    background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7)) !important;
-    padding-top: 20px !important;
-    border-radius: 0 0 20px 20px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.8)) !important;
+    border-radius: 0 0 15px 15px;
 }
 
-/* Plyr buton hover renkleri */
-.plyr--video .plyr__control:hover {
-    background: var(--accent) !important;
-    color: #000 !important;
-}
-
-/* Hoşgeldin Mesajı */
-.welcome-msg {
-    display: flex; align-items: center; justify-content: center; 
-    height: 100%; width: 100%; color: rgba(255,255,255,0.1); 
-    font-weight: 900; font-size: 24px; letter-spacing: 3px;
-    text-align: center; padding: 20px;
-}
-
-/* --- SİNEMA MODU (GÜNCELLENDİ) --- */
-body.cinema-mode .sidebar,
-body.cinema-mode .toggle-btn,
-body.cinema-mode .top-ad-bar,
-body.cinema-mode .layout-header .status,
-body.cinema-mode .layout-buttons button:not(#cinema-btn) { 
-    display: none !important; 
-}
-
-/* Header alanını buton için koru */
-body.cinema-mode .layout-header {
-    margin: 0;
-    padding: 0;
-    border: none;
-}
-
-/* Çıkış Butonu Sabitleme */
-body.cinema-mode #cinema-btn {
-    display: block !important;
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 5000;
-    background: var(--accent) !important;
-    color: #000 !important;
-    font-weight: 800;
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.6);
-    border: none;
-}
-
-/* PiP Butonunu Sinema Modunda Aşağı Kaydır (Üst üste binmemesi için) */
-body.cinema-mode .pip-btn {
-    top: 80px !important; 
-    right: 25px !important;
-    z-index: 5001;
-    background: rgba(0, 0, 0, 0.8) !important;
-}
-
-body.cinema-mode .player-box:not(.active) { display: none; }
-body.cinema-mode .player-box.active { 
-    width: 100vw; height: 100vh; position: fixed; 
-    top: 0; left: 0; z-index: 2000; border-radius: 0; border: none; 
-    max-width: none; max-height: none;
-}
-body.cinema-mode .plyr { border-radius: 0; }
-
-/* --- PLAYER GRİD SİSTEMİ --- */
-#players { 
-    display: grid; 
-    gap: 15px; 
-    height: 100%; 
-    transition: 0.4s; 
-    flex-grow: 1; 
-    align-items: center; 
-    justify-items: center; 
-    padding: 10px;
-}
-
-.player-box { 
-    background: #000; 
-    border-radius: 20px; 
-    border: 2px solid var(--border); 
-    overflow: hidden; 
-    position: relative; 
-    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
-    cursor: pointer;
-    width: 100%;
-    height: 100%;
-    max-width: 1100px; 
-    max-height: 75vh;
-}
-
-/* Çoklu ekran seçildiğinde kutuları büyüt */
-#players:has(.player-box:nth-child(2)) .player-box {
-    max-width: 100%;
-    max-height: 100%;
-}
-
-.player-box.active { 
-    border-color: var(--accent); 
-    box-shadow: 0 0 20px rgba(0, 210, 255, 0.15); 
-}
-
-.player-info { 
-    position: absolute; top: 15px; left: 15px; 
-    background: rgba(8, 10, 18, 0.7); 
-    backdrop-filter: blur(4px);
-    padding: 6px 14px; border-radius: 8px;
-    color: var(--accent); 
-    font-size: 10px; font-weight: 800; z-index: 10; pointer-events: none; 
-    border: 1px solid var(--border);
-    letter-spacing: 1px;
-}
-
-.pip-btn { 
-    position: absolute; top: 12px; right: 12px; 
-    background: rgba(0,0,0,0.5); border: 1px solid var(--accent); 
-    color: var(--accent); width: 32px; height: 32px; border-radius: 8px; 
-    cursor: pointer; z-index: 15; backdrop-filter: blur(5px); 
-    transition: 0.2s;
-}
-.pip-btn:hover { background: var(--accent); color: #000; }
-
-/* --- SİDEBAR --- */
+/* --- SEKMELİ SİDEBAR --- */
 .sidebar { 
-    width: 260px; min-width: 260px; height: 100vh;
-    background: var(--sidebar-bg); backdrop-filter: blur(15px); 
+    width: 280px; min-width: 280px; height: 100vh;
+    background: var(--sidebar-bg); backdrop-filter: blur(20px); 
     border-right: 1px solid var(--border); display: flex; flex-direction: column; 
     transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); position: relative; z-index: 1000; 
 }
-.sidebar.collapsed { width: 0; min-width: 0; overflow: hidden; opacity: 0; pointer-events: none; }
 
-.toggle-btn { 
-    position: fixed; left: 248px; top: 25px; 
-    background: var(--accent); border: none; width: 28px; height: 28px; 
-    border-radius: 50%; cursor: pointer; z-index: 1005; 
-    transition: all 0.4s ease-in-out; display: flex; align-items: center; justify-content: center;
-    box-shadow: 0 0 15px rgba(0, 210, 255, 0.3); font-size: 14px; color: #000;
+/* Mobilde Sidebar'ı Gizle/Göster Mantığı */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed; left: -280px; width: 280px;
+    }
+    .sidebar.active { left: 0; box-shadow: 20px 0 50px rgba(0,0,0,0.8); }
+    .main-content { padding: 10px !important; }
 }
-.sidebar.collapsed ~ .toggle-btn { left: 15px; transform: rotate(180deg); }
 
-.header { padding: 30px 20px 20px; font-size: 22px; font-weight: 900; letter-spacing: -1px; }
-.header span { color: var(--accent); }
+/* Sekme Butonları (Tabs) */
+.sidebar-tabs {
+    display: flex; padding: 15px; gap: 8px;
+    border-bottom: 1px solid var(--border);
+}
+.tab-btn {
+    flex: 1; background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+    color: #888; padding: 10px 5px; border-radius: 10px; cursor: pointer;
+    font-size: 12px; font-weight: 700; transition: 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+.tab-btn.active {
+    background: var(--accent); color: #000; border-color: var(--accent);
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.3);
+}
+
+/* --- KANAL VE MAÇ LİSTESİ --- */
+.tab-content { display: none; flex-grow: 1; overflow-y: auto; }
+.tab-content.active { display: block; }
 
 #search { 
-    width: 85%; background: rgba(255,255,255,0.03); 
-    border: 1px solid var(--border); border-radius: 12px; 
-    padding: 12px 15px; color: white; margin: 0 auto 20px; outline: none; transition: 0.3s;
+    width: calc(100% - 30px); background: rgba(255,255,255,0.03); 
+    border: 1px solid var(--border); border-radius: 10px; 
+    padding: 10px 15px; color: white; margin: 15px; outline: none;
 }
-#search:focus { border-color: var(--accent); background: rgba(0, 210, 255, 0.05); }
+#search:focus { border-color: var(--accent); box-shadow: 0 0 10px rgba(0,255,0,0.1); }
 
-#channels { flex-grow: 1; overflow-y: auto; padding: 10px; }
-#channels::-webkit-scrollbar { width: 3px; }
-#channels::-webkit-scrollbar-thumb { background: var(--accent); }
+.channel { 
+    padding: 12px; margin: 0 10px 8px; border-radius: 12px; 
+    cursor: pointer; display: flex; align-items: center; gap: 12px; 
+    transition: 0.2s; border: 1px solid transparent; background: rgba(255,255,255,0.01);
+}
+.channel:hover, .channel.selected-chan { background: rgba(0, 255, 0, 0.05); border-color: rgba(0, 255, 0, 0.2); }
+.channel.selected-chan { border-color: var(--accent); }
 
-.channel { padding: 14px; margin: 0 8px 10px; border-radius: 15px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: 0.2s; border: 1px solid transparent; }
-.channel:hover, .channel.selected-chan { background: rgba(0, 210, 255, 0.08); border-color: rgba(0, 210, 255, 0.3); }
-.channel.selected-chan { background: rgba(0, 210, 255, 0.15); border-color: var(--accent); }
+.channel-logo { 
+    width: 35px; height: 35px; background: #111; border-radius: 8px; 
+    display: flex; align-items: center; justify-content: center; overflow: hidden; 
+    border: 1px solid var(--border); 
+}
+.channel-logo img { width: 75%; height: 75%; object-fit: contain; }
+.channel-name { font-size: 13px; font-weight: 600; }
 
-.channel-logo { width: 40px; height: 40px; background: #000; border-radius: 10px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px solid var(--border); }
-.channel-logo img { width: 80%; height: 80%; object-fit: contain; }
-
-.main-content { 
-    flex-grow: 1; display: flex; flex-direction: column; 
-    padding: 20px 30px; 
-    height: 100vh; box-sizing: border-box; 
+/* Maç Kartları Tasarımı */
+.match-card {
+    background: rgba(255,255,255,0.02); margin: 10px; padding: 15px;
+    border-radius: 12px; border: 1px solid var(--border);
+    transition: 0.3s; position: relative; overflow: hidden;
+}
+.match-card:hover { border-color: var(--accent); background: rgba(0, 255, 0, 0.02); }
+.match-card::before {
+    content: ''; position: absolute; left: 0; top: 0; height: 100%; width: 3px; background: var(--accent);
 }
 
-.layout-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
-.status { display: flex; align-items: center; gap: 15px; }
-.live-indicator { color: #ff4b2b; font-weight: 900; font-size: 11px; animation: blink 1.5s infinite; }
+/* --- PLAYER GRİD VE KUTULAR --- */
+.main-content { flex-grow: 1; display: flex; flex-direction: column; padding: 20px; overflow: hidden; }
 
-@keyframes blink { 50% { opacity: 0.3; } }
+#players { 
+    display: grid; gap: 15px; height: 100%; flex-grow: 1; align-items: center; justify-items: center;
+}
+
+.player-box { 
+    background: #000; border-radius: 15px; border: 2px solid var(--border); 
+    overflow: hidden; position: relative; transition: 0.3s; width: 100%; height: 100%;
+}
+.player-box.active { border-color: var(--accent); box-shadow: 0 0 30px rgba(0, 255, 0, 0.1); }
+
+.player-info { 
+    position: absolute; top: 15px; left: 15px; background: rgba(0,0,0,0.7); 
+    padding: 5px 12px; border-radius: 6px; color: var(--accent); 
+    font-size: 10px; font-weight: 800; z-index: 10; border: 1px solid var(--border);
+}
+
+/* --- KONTROLLER (Toggle, Buttons) --- */
+.toggle-btn { 
+    position: fixed; left: 265px; top: 25px; 
+    background: var(--accent); border: none; width: 30px; height: 30px; 
+    border-radius: 8px; cursor: pointer; z-index: 1100; transition: 0.3s;
+    display: flex; align-items: center; justify-content: center; color: #000;
+}
 
 .layout-buttons button { 
     background: rgba(255,255,255,0.05); border: 1px solid var(--border); 
-    color: white; padding: 10px 18px; border-radius: 12px; cursor: pointer; 
-    margin-left: 8px; font-size: 13px; font-weight: 600; transition: 0.3s; 
+    color: white; padding: 8px 15px; border-radius: 10px; cursor: pointer; 
+    margin-left: 5px; font-size: 12px; font-weight: 700; transition: 0.3s; 
 }
-.layout-buttons button:hover { background: var(--accent); color: #000; transform: translateY(-2px); }
-.layout-buttons button.special-btn { border-color: var(--accent); color: var(--accent); }
+.layout-buttons button:hover { background: var(--accent); color: #000; }
 
+/* --- SİNEMA MODU --- */
+body.cinema-mode .sidebar, body.cinema-mode .toggle-btn, body.cinema-mode .top-ad-bar, body.cinema-mode .layout-header .status { display: none !important; }
+body.cinema-mode .player-box.active { 
+    position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 2000; border: none; border-radius: 0;
+}
+body.cinema-mode .plyr { border-radius: 0; }
+
+/* --- MOBİL İNCE AYARLAR --- */
 @media (max-width: 768px) {
-    .main-content { padding: 15px; }
-    .player-box { max-height: 30vh; border-radius: 15px; }
-    .layout-header { flex-direction: column; gap: 15px; align-items: flex-start; }
-    .layout-buttons { width: 100%; display: flex; gap: 5px; }
-    .layout-buttons button { flex: 1; margin: 0; padding: 10px 5px; font-size: 11px; }
+    .toggle-btn { left: 10px; top: 15px; } /* Mobilde butonu köşeye çek */
+    .layout-header { margin-top: 40px; } /* Butona yer aç */
+    #players { grid-template-columns: 1fr !important; }
+    .player-box { max-height: 250px; }
+    .layout-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 5px; width: 100%; }
+    .layout-buttons button { margin: 0; width: 100%; }
 }
