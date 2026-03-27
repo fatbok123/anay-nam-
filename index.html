@@ -1,82 +1,89 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNVVJ5986D"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'G-RNVVJ5986D');
+    </script>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>FATBOK TV - CREXOWW</title>
     
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
+    
+    <style>
+        /* Player kutularının Plyr ile uyumlu olması için ek stil */
+        .plyr { height: 100%; width: 100%; border-radius: inherit; }
+        #players { min-height: 400px; } /* Boşken çökmemesi için */
+    </style>
 </head>
-
 <body>
 
-<!-- DESKTOP SIDEBAR (Aynı kaldı) -->
-<nav class="sidebar" id="sidebar">
-    <div class="header">FATBOK<span>TV</span></div>
-    <div class="search-box">
-        <input type="text" id="search" placeholder="Kanal ara...">
-    </div>
-    <div id="channels"></div>
-</nav>
-
-<button class="toggle-btn" id="sidebar-toggle">☰</button>
-
-<main class="main-content">
-
-<header class="layout-header">
-    <div class="status">
-        <span class="live-indicator">● CANLI</span>
-        <span id="current-channel">Yayın Merkezi</span>
-    </div>
-
-    <div class="layout-buttons">
-        <button onclick="setLayout(1)">1</button>
-        <button onclick="setLayout(2)">2</button>
-        <button onclick="setLayout(4)">4</button>
-        <button onclick="toggleCinemaMode()" id="cinema-btn">Sinema</button>
-    </div>
-</header>
-
-<div id="players"></div>
-
-</main>
-
-<!-- 🔥 MOBİL ALT PANEL -->
-<div class="bottom-panel" id="bottomPanel">
-
-    <div class="panel-handle" onclick="togglePanel()">⬆</div>
-
-    <!-- TAB -->
-    <div class="panel-tabs">
-        <button class="tab active" onclick="switchTab('channelsTab')">Kanallar</button>
-        <button class="tab" onclick="switchTab('matchesTab')">Maçlar</button>
-    </div>
-
-    <!-- KANALLAR -->
-    <div id="channelsTab" class="tab-content active">
-        <input type="text" id="search-mobile" placeholder="Kanal ara...">
-        <div id="channels-mobile"></div>
-    </div>
-
-    <!-- MAÇLAR -->
-    <div id="matchesTab" class="tab-content">
-        <div class="match" onclick="playStream('URL_BURAYA', 'MAÇ YAYINI')">
-            ⚽ Galatasaray vs Fenerbahçe<br><small>20:00 - Bein Sports 1</small>
+    <nav class="sidebar" id="sidebar">
+        <div class="header">FATBOK<span>TV</span></div>
+        
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Kanal ara..." autocomplete="off">
         </div>
 
-        <div class="match" onclick="playStream('URL_BURAYA', 'MAÇ YAYINI')">
-            ⚽ Real Madrid vs Barcelona<br><small>22:00 - S Sport</small>
+        <div id="channels"></div>
+
+        <div class="sidebar-footer" style="margin-top: auto; padding: 15px 10px; background: #111; border-top: 1px solid rgba(255,255,255,0.1); position: sticky; bottom: 0;">
+            <a href="mailto:fatboktvreklam@proton.me" 
+               style="display: flex; align-items: center; justify-content: center; text-decoration: none; color: #00ff00; font-size: 12px; font-weight: bold; background: rgba(0, 255, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 255, 0, 0.3); transition: 0.3s; width: 100%; box-sizing: border-box;">
+                <i class="fas fa-envelope-open-text" style="margin-right: 8px;"></i>
+                <span>Reklam & Sponsorluk</span>
+            </a>
         </div>
-    </div>
+    </nav>
 
-</div>
+    <button class="toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menü Değiştir">◀</button>
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-<script src="script.js"></script>
+    <main class="main-content">
+        <header class="layout-header">
+            <div class="status">
+                <span class="live-indicator">● CANLI</span>
+                <span id="current-channel">Yayın Merkezi</span>
+            </div>
 
+            <div class="layout-buttons">
+                <button onclick="setLayout(1)" class="layout-btn">1'li</button>
+                <button onclick="setLayout(2)" class="layout-btn">2'li</button>
+                <button onclick="setLayout(4)" class="layout-btn">4'lü</button>
+                <button onclick="toggleCinemaMode()" id="cinema-btn" class="special-btn">Sinema Modu</button>
+            </div>
+        </header>
+
+        <div class="top-ad-bar" style="background: rgba(0, 255, 0, 0.05); border: 1px solid rgba(0, 255, 0, 0.2); padding: 6px 15px; margin: 8px 15px 2px 15px; border-radius: 6px;">
+            <a href="mailto:fatboktvreklam@proton.me" 
+               style="text-decoration: none; color: #00ff00; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 12px; font-weight: 700;">
+                <i class="fas fa-handshake"></i>
+                <span>REKLAM VE SPONSORLUK:</span>
+                <span style="color: #fff; background: rgba(0, 255, 0, 0.15); padding: 2px 8px; border-radius: 4px; font-family: monospace;">fatboktvreklam@proton.me</span>
+            </a>
+        </div>
+
+        <div id="players">
+            <div class="welcome-msg">
+                <div class="msg-content">
+                    <span>Lütfen izlemek istediğiniz kanalı soldaki menüden seçiniz.</span>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
+    
+    <script src="script.js"></script>
 </body>
 </html>
