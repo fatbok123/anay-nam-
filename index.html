@@ -24,16 +24,16 @@
         /* Player kutularının Plyr ile uyumlu olması için ek stil */
         .plyr { height: 100%; width: 100%; border-radius: inherit; }
         #players { min-height: 400px; } /* Boşken çökmemesi için */
-        
+
         /* Maç Merkezi Paneli için ek stil */
         #match-center-panel {
             display: none;
-            height: calc(100vh - 150px);
-            margin: 10px 15px;
-            border-radius: 15px;
-            border: 1px solid var(--accent);
-            background: #080a12;
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
             overflow: hidden;
+            border: 1px solid var(--accent);
+            background: #000;
         }
     </style>
 </head>
@@ -43,8 +43,9 @@
         <div class="header">FATBOK<span>TV</span></div>
         
         <div style="padding: 0 15px 15px;">
-            <button onclick="toggleMatchCenter()" class="layout-btn" style="width: 100%; margin: 0; background: linear-gradient(135deg, #00d2ff 0%, #0072ff 100%); border: none; color: #fff; font-weight: 900; border-radius: 10px; padding: 12px; cursor: pointer;">
-                <i class="fas fa-futbol"></i> MAÇ MERKEZİ
+            <button onclick="toggleMatchCenter()" class="layout-btn" style="width: 100%; margin: 0; background: linear-gradient(135deg, #00d2ff 0%, #0072ff 100%); border: none; color: #fff; font-weight: 900; border-radius: 10px; padding: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <i class="fas fa-futbol"></i>
+                <span>MAÇ MERKEZİ</span>
             </button>
         </div>
 
@@ -90,12 +91,12 @@
         </div>
 
         <div id="match-center-panel">
-            <iframe id="ls-widget" 
-                    src="https://www.livescore.in/tr/free/widgets/live-scores/?width=100%25&height=700&tabs=1,2,3,4&defaultTab=1&theme=dark" 
-                    width="100%" 
-                    height="100%" 
-                    frameborder="0" 
-                    scrolling="yes">
+            <iframe 
+                src="https://www.livescore.in/tr/free/widgets/live-scores/?width=100%25&height=700&tabs=1,2,3,4&defaultTab=1&theme=dark" 
+                width="100%" 
+                height="100%" 
+                frameborder="0" 
+                scrolling="yes">
             </iframe>
         </div>
 
