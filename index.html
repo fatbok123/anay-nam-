@@ -3,157 +3,215 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FATBOK TV | Kesintisiz Canlı Yayın</title>
-    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
+    <title>FATBOK TV - Canlı Maç İzle</title>
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/0423bb6b88.js" crossorigin="anonymous"></script>
     
     <style>
         :root {
-            --ana-renk: #05070b;
-            --vurgu-renk: #ff7b00;
-            --panel-renk: #111215;
+            --bg-color: #05070b;
+            --panel-color: #111215;
+            --accent-color: #ff7b00;
+            --text-color: #ffffff;
         }
 
         body {
-            background-color: var(--ana-renk);
-            color: #ffffff;
+            background-color: var(--bg-color);
+            color: var(--text-color);
             font-family: 'Rubik', sans-serif;
             margin: 0;
-            padding: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Video Paneli Konteyneri */
-        .player-wrapper {
+        .main-container {
             width: 95%;
-            max-width: 1100px;
-            background: var(--panel-renk);
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            max-width: 1200px;
+            background: var(--panel-color);
+            border-radius: 12px;
             border: 1px solid #1f2126;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
+            overflow: hidden;
         }
 
-        /* Başlık Alanı */
+        /* Header Kısmı */
         .player-header {
-            padding: 20px;
-            background: linear-gradient(90deg, #16171b 0%, #111215 100%);
+            padding: 15px 20px;
+            background: #1a1b1f;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid #222;
         }
 
-        .channel-info {
+        .live-indicator {
             display: flex;
             align-items: center;
-            gap: 12px;
-        }
-
-        .live-tag {
-            background: #ff0000;
-            color: white;
-            padding: 4px 10px;
-            border-radius: 4px;
-            font-size: 11px;
+            gap: 10px;
+            color: #ff0000;
             font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            animation: pulse 1.5s infinite;
+            font-size: 14px;
         }
 
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            animation: blink 1s infinite;
         }
 
-        /* Oynatıcı Alanı */
-        .video-js {
+        @keyframes blink { 0% {opacity: 1;} 50% {opacity: 0.3;} 100% {opacity: 1;} }
+
+        /* Video Alanı */
+        .video-container {
+            position: relative;
             width: 100%;
+            background: #000;
             aspect-ratio: 16 / 9;
-            background-color: #000;
         }
 
-        /* Kanal Listesi (Alt Kısım) */
-        .channel-list {
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        /* Kanal Listesi */
+        .channel-bar {
             padding: 15px;
+            background: #0d0e12;
             display: flex;
             gap: 10px;
             overflow-x: auto;
-            background: #0d0e12;
+            scrollbar-width: thin;
         }
 
-        .channel-btn {
+        .chan-btn {
             background: #1c1e24;
             border: 1px solid #333;
-            color: #aaa;
-            padding: 8px 15px;
+            color: #ccc;
+            padding: 10px 20px;
             border-radius: 6px;
             cursor: pointer;
-            transition: 0.3s;
             white-space: nowrap;
+            transition: 0.3s;
         }
 
-        .channel-btn:hover, .channel-btn.active {
-            background: var(--vurgu-renk);
+        .chan-btn:hover, .chan-btn.active {
+            background: var(--accent-color);
             color: #000;
+            border-color: var(--accent-color);
             font-weight: bold;
-            border-color: var(--vurgu-renk);
         }
 
-        /* Sağ Tık Engelleme Mesajı (Opsiyonel) */
-        #alert-box {
+        /* Sinema Modu Butonu */
+        #cinema-mode {
+            background: #333;
+            border: none;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        #cinema-mode.active {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        /* Sinema Modu Aktifken */
+        body.cinema-on {
+            background: #000;
+        }
+        body.cinema-on .player-header, body.cinema-on .channel-bar {
             display: none;
-            position: fixed;
-            bottom: 20px;
-            background: red;
-            padding: 10px 20px;
-            border-radius: 5px;
-            z-index: 9999;
+        }
+        body.cinema-on .main-container {
+            width: 100%;
+            max-width: 100%;
+            border: none;
         }
     </style>
 </head>
-<body oncontextmenu="return false;"> <div class="player-wrapper">
+<body oncontextmenu="return false;">
+
+<div class="main-container">
     <div class="player-header">
-        <div class="channel-info">
-            <span class="live-tag">CANLI</span>
-            <span style="font-weight: bold; font-size: 18px;">BeIN Sports 1 HD</span>
+        <div class="live-indicator">
+            <div class="dot"></div> CANLI: BEIN SPORTS 1
         </div>
-        <div style="color: #666; font-size: 13px;">FATBOK TV v3.0</div>
+        <div>
+            <button id="cinema-mode" onclick="toggleCinema()"><i class="fa-solid fa-expand"></i> Sinema Modu</button>
+            <span style="margin-left:15px; font-size: 12px; color: #555;">FATBOK TV v3.5</span>
+        </div>
     </div>
 
-    <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" poster="https://static.beinconnect.com.tr/beinsports_logo.png">
-        <source src="https://24taraftarium9.xyz//hls/b1.m3u8" type="application/x-mpegURL">
-        <p class="vjs-no-js">Bu videoyu izlemek için tarayıcınızın JavaScript'i desteklemesi gerekir.</p>
-    </video>
+    <div class="video-container">
+        <iframe 
+            id="main-player"
+            src="https://24taraftarium9.xyz/player.php?id=b1&ch=b1" 
+            referrerpolicy="no-referrer"
+            allowfullscreen 
+            scrolling="no">
+        </iframe>
+    </div>
 
-    <div class="channel-list">
-        <button class="channel-btn active">BEIN SPORTS 1</button>
-        <button class="channel-btn">BEIN SPORTS 2</button>
-        <button class="channel-btn">BEIN SPORTS 3</button>
-        <button class="channel-btn">EXXEN SPOR</button>
-        <button class="channel-btn">TABİİ SPOR</button>
+    <div class="channel-bar">
+        <button class="chan-btn active" onclick="changeChannel('b1', 'BEIN SPORTS 1')">BEIN 1</button>
+        <button class="chan-btn" onclick="changeChannel('b2', 'BEIN SPORTS 2')">BEIN 2</button>
+        <button class="chan-btn" onclick="changeChannel('b3', 'BEIN SPORTS 3')">BEIN 3</button>
+        <button class="chan-btn" onclick="changeChannel('exe1', 'EXXEN SPOR')">EXXEN</button>
+        <button class="chan-btn" onclick="changeChannel('tabii', 'TABİİ SPOR')">TABİİ</button>
     </div>
 </div>
 
-<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
 <script>
-    // Oynatıcıyı Başlat
-    var player = videojs('my-video');
-    player.fluid(true); // Otomatik boyutlandırma
+    // Kanal Değiştirme Fonksiyonu
+    function changeChannel(id, name) {
+        const player = document.getElementById('main-player');
+        // Yeni linki set et
+        player.src = `https://24taraftarium9.xyz/player.php?id=${id}&ch=${id}`;
+        
+        // Başlığı güncelle
+        document.querySelector('.live-indicator').innerHTML = `<div class="dot"></div> CANLI: ${name}`;
+        
+        // Buton aktiflik durumunu güncelle
+        document.querySelectorAll('.chan-btn').forEach(btn => btn.classList.remove('active'));
+        event.target.classList.add('active');
+    }
 
-    // Güvenlik: F12 ve Sağ Tık Engelleme (Senin istediğin gibi)
+    // Sinema Modu
+    function toggleCinema() {
+        document.body.classList.toggle('cinema-on');
+        const btn = document.getElementById('cinema-mode');
+        btn.classList.toggle('active');
+        if(document.body.classList.contains('cinema-on')) {
+            btn.innerHTML = "Çıkış (Esc)";
+        } else {
+            btn.innerHTML = '<i class="fa-solid fa-expand"></i> Sinema Modu';
+        }
+    }
+
+    // Esc tuşu ile sinema modundan çık
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "Escape" && document.body.classList.contains('cinema-on')) {
+            toggleCinema();
+        }
+    });
+
+    // Güvenlik: F12 ve Sağ Tık Engelleme
     document.onkeydown = function(e) {
-        if(event.keyCode == 123) return false; // F12
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; // Ctrl+Shift+C
-        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
-        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+        if(event.keyCode == 123) return false;
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false;
     };
 </script>
 
