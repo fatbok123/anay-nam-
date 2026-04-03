@@ -124,3 +124,53 @@ body {
 ::-webkit-scrollbar { width: 5px; }
 ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* --- MAÇ MERKEZİ PANELİ (EKLEME) --- */
+#match-center-panel {
+    display: none; /* Başlangıçta gizli */
+    flex-grow: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 500px;
+    background: var(--bg-dark);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    overflow: hidden;
+    transition: 0.3s;
+    animation: panelFadeIn 0.5s ease;
+}
+
+/* Panel açılış efekti */
+@keyframes panelFadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Maç Merkezi içindeki iframe */
+#match-center-panel iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+}
+
+/* Mobilde Maç Merkezi Ayarları */
+@media (max-width: 768px) {
+    #match-center-panel {
+        height: 80vh; /* Mobilde ekranın %80'ini kaplasın */
+        margin: 5px 0;
+        border-radius: 12px;
+    }
+}
+
+/* Sidebar'daki Maç Merkezi Butonu İçin Hover Efekti */
+.nav-section button:hover {
+    filter: brightness(1.2);
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0, 210, 255, 0.4);
+}
+
+/* Sinema modunda maç merkezini gizle (çakışma olmasın) */
+body.cinema-mode #match-center-panel {
+    display: none !important;
+}
