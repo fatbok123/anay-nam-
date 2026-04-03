@@ -12,7 +12,7 @@ body {
   margin: 0; font-family: 'Inter', sans-serif;
   background: radial-gradient(circle at 50% 50%, #1a1f35 0%, #080a12 100%);
   color: var(--text-main); display: flex; height: 100vh; width: 100vw; overflow: hidden;
-  transition: background 0.5s ease; /* Işık geçişi için eklendi */
+  transition: background 0.5s ease; /* Işık geçişi için */
 }
 
 /* --- PLYR MODERN TASARIM ÖZELLEŞTİRME --- */
@@ -23,14 +23,12 @@ body {
     background: #000 !important;
 }
 
-/* Player içindeki kontrol çubuğunu biraz daha şeffaf ve blur yapalım */
 .plyr--video .plyr__controls {
     background: linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0.7)) !important;
     padding-top: 20px !important;
     border-radius: 0 0 20px 20px;
 }
 
-/* Plyr buton hover renkleri */
 .plyr--video .plyr__control:hover {
     background: var(--accent) !important;
     color: #000 !important;
@@ -44,9 +42,9 @@ body {
     text-align: center; padding: 20px;
 }
 
-/* --- SİNEMA MODU (IŞIKLARI KAPAT) --- */
+/* --- SİNEMA MODU (GÜNCELLENDİ: IŞIKLARI KAPAT) --- */
 body.cinema-mode {
-    background: #000000 !important; /* Arkaplan tam siyah */
+    background: #000000 !important; /* Tam karartma */
 }
 
 body.cinema-mode .sidebar,
@@ -64,9 +62,11 @@ body.cinema-mode .layout-header {
     border: none;
 }
 
-/* Çıkış Butonu Sabitleme */
+/* Çıkış Butonu Sabitleme ve Parlama */
 body.cinema-mode #cinema-btn {
-    display: block !important;
+    display: flex !important;
+    align-items: center;
+    gap: 8px;
     position: fixed;
     top: 20px;
     right: 20px;
@@ -74,13 +74,15 @@ body.cinema-mode #cinema-btn {
     background: var(--accent) !important;
     color: #000 !important;
     font-weight: 800;
-    box-shadow: 0 0 30px rgba(0, 210, 255, 0.8); /* Daha güçlü parlama */
+    box-shadow: 0 0 30px rgba(0, 210, 255, 0.6);
     border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
 }
 
 /* PiP Butonunu Sinema Modunda Aşağı Kaydır */
 body.cinema-mode .pip-btn {
-    top: 80px !important; 
+    top: 85px !important; 
     right: 25px !important;
     z-index: 5001;
     background: rgba(0, 0, 0, 0.8) !important;
@@ -91,7 +93,7 @@ body.cinema-mode .player-box.active {
     width: 100vw; height: 100vh; position: fixed; 
     top: 0; left: 0; z-index: 2000; border-radius: 0; border: none; 
     max-width: none; max-height: none;
-    box-shadow: 0 0 100px rgba(0, 210, 255, 0.2); /* Videonun etrafındaki hafif ışık */
+    box-shadow: 0 0 100px rgba(0, 210, 255, 0.15); /* Hafif atmosferik ışık */
 }
 body.cinema-mode .plyr { border-radius: 0; }
 
@@ -121,7 +123,6 @@ body.cinema-mode .plyr { border-radius: 0; }
     max-height: 75vh;
 }
 
-/* Çoklu ekran seçildiğinde kutuları büyüt */
 #players:has(.player-box:nth-child(2)) .player-box {
     max-width: 100%;
     max-height: 100%;
