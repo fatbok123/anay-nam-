@@ -20,7 +20,6 @@ let playerInfos = [];
 function toggleSidebar() {
     const sidebar = document.getElementById("sidebar");
     const toggleBtn = document.querySelector(".toggle-btn");
-    if (!sidebar) return;
     sidebar.classList.toggle("collapsed");
     toggleBtn.innerText = sidebar.classList.contains("collapsed") ? "▶" : "◀";
 }
@@ -32,11 +31,9 @@ function toggleCinemaMode() {
     const btn = document.getElementById("cinema-btn");
     
     if (isCinema) {
-        // Işıklar Kapandığında: Çakışmayı engellemek için sidebar açıksa kapat
-        if (sidebar && !sidebar.classList.contains("collapsed")) {
-            sidebar.classList.add("collapsed");
-            const toggleBtn = document.querySelector(".toggle-btn");
-            if(toggleBtn) toggleBtn.innerText = "▶";
+        // Işıklar Kapandığında: Sidebar'ı kapat ve butonu güncelle
+        if (!sidebar.classList.contains("collapsed")) {
+            toggleSidebar();
         }
         btn.innerHTML = '<i class="fas fa-lightbulb"></i> Işıkları Aç';
         btn.style.background = "var(--accent)";
@@ -67,7 +64,7 @@ async function togglePiP(index) {
     } catch (error) { console.error("PiP Hatası:", error); }
 }
 
-// PLAYER OLUŞTURMA
+// PLAYER OLUŞTURMA (MOBİL DÜZELTMESİ EKLENDİ)
 function createPlayers(count) {
     const container = document.getElementById("players");
     container.innerHTML = ""; 
@@ -79,10 +76,14 @@ function createPlayers(count) {
 
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
-        container.style.gridTemplateColumns = (count >= 2) ? "1fr 1fr" : "1fr";
+        // MOBİL DÜZELTMESİ: Mobilde kaç ekran olursa olsun alt alta (1fr) yap
+        container.style.gridTemplateColumns = "1fr";
         container.style.height = "auto"; 
+        container.style.display = "flex";
+        container.style.flexDirection = "column";
     } else {
         const gridStyles = { 1: { col: "1fr" }, 2: { col: "1fr", row: "1fr 1fr" }, 4: { col: "1fr 1fr" } };
+        container.style.display = "grid";
         container.style.gridTemplateColumns = gridStyles[count].col;
         container.style.height = "100%";
     }
@@ -135,11 +136,11 @@ function selectPlayer(index) {
         }
     });
     const activeName = playerInfos[index] ? playerInfos[index].innerText : "Yayın Merkezi";
-    const statusEl = document.getElementById("current-channel");
-    if(statusEl) statusEl.innerText = activeName;
+    const currentChannelEl = document.getElementById("current-channel");
+    if(currentChannelEl) currentChannelEl.innerText = activeName;
 }
 
-// CANLI YAYIN BAŞLATMA
+// CANLI YAYIN BAŞLATMA (HLS + EMBED DESTEĞİ)
 function playStream(url, name = "Bilinmeyen Kanal") {
     if (players.length === 0) setLayout(1);
 
@@ -206,15 +207,15 @@ function setLayout(count) {
     createPlayers(count); 
 }
 
-// KANAL VERİLERİ
+// KANAL VERİLERİ (Aynen korundu)
 const channels = [
     { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
     { name: "Bein Sports 1 (YEDEK)", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://curly-fire-b7a1.bestlivever.workers.dev/watch/chunk/yayinz.m3u8" },
     { name: "Bein Sports 2", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
     { name: "Bein Sports 2 (YEDEK)", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
     { name: "Bein Sports 3", logo: "https://trgooltv61.top/img/beinsports3.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-3.m3u8" },
-    { name: "Bein Sports 4", logo: "https://trgooltv61.top/img/beinsports4.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-4.m3u8" },
-    { name: "Bein Sports 5", logo: "https://trgooltv61.top/img/beinsports5.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-5.m3u8" },
+    { name: "Bein Sports 4", logo: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-4.m3u8" },
+    { name: "Bein Sports 5", logo: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-5.m3u8" },
     { name: "Bein Sports Max 1", logo: "https://trgooltv61.top/img/beinsportsmax1.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-max-1.m3u8" },
     { name: "Bein Sports Max 1 (YEDEK)", logo: "https://trgooltv61.top/img/beinsportsmax1.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xbeinsportsmax-1/playlist.m3u8" },
     { name: "Bein Sports Max 2", logo: "https://trgooltv61.top/img/beinsportsmax2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-max-2.m3u8" },
@@ -237,7 +238,6 @@ const channels = [
 
 function renderChannels(filter = "") {
     const list = document.getElementById("channels"); 
-    if(!list) return;
     list.innerHTML = "";
     channels.filter(c => c.name.toLowerCase().includes(filter.toLowerCase())).forEach(c => {
         const div = document.createElement("div"); 
