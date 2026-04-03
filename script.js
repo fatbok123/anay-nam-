@@ -222,18 +222,18 @@ const channels = [
     { name: "Tivibu Spor 1", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xtivibuspor-1/playlist.m3u8" },
     { name: "Tivibu Spor 2", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-2.m3u8" },
     { name: "Tivibu Spor 3", logo: "https://itv224186.tmp.tivibu.com.tr:6430/images/poster/20250801839221.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/tivibu-spor-3.m3u8" },
-    { name: "S Sport", logo: "https://www.trgoals125.top/lib/img/channels/s-sport.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess1.m3u8" },
-    { name: "S Sport 2", logo: "https://www.trgoals125.top/lib/img/channels/s-sport-2.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess2.m3u8" },
-    { name: "S Sport 2 (YEDEK)", logo: "https://www.trgoals125.top/lib/img/channels/s-sport-2.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xssport2/playlist.m3u8" },
-    { name: "Tabii Spor", logo: "", url: "https://kl9mr2vxw7nq5py1sh4tj3gb6.medya.trt.com.tr/master_1080p.m3u8" },
-    { name: "Tabii Spor 1", logo: "", url: "https://pz4qt7nw1mr9sh2vl5xk8jg3y.medya.trt.com.tr/master.m3u8" },
-    { name: "Tabii Spor 2 ", logo: "", url: "https://mr8bv4kl1nq7sh9tw2xp5zj6g.medya.trt.com.tr/master_1440p.m3u8" },
-    { name: "Tabii Spor 3", logo: "", url: "https://mR4vL7nQ2sH9tW5xP1zK3gJ8b.medya.trt.com.tr/master.m3u8" },
-    { name: "TRT Spor", logo: "https://www.trgoals124.top/lib/img/channels/trt-spor.png", url: "https://tv-trtspor1.medya.trt.com.tr/master.m3u8" },
+    { name: "S Sport", logo: "https://trgooltv61.top/img/ssport1.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess1.m3u8" },
+    { name: "S Sport 2", logo: "https://trgooltv61.top/img/ssport2.png", url: "https://andro.0638527.xyz/checklist/androstreamlivess2.m3u8" },
+    { name: "S Sport 2 (YEDEK)", logo: "https://trgooltv61.top/img/ssport2.png", url: "https://dga1op10s1u3leo.ec876fd9240622.click/live/xssport2/playlist.m3u8" },
+    { name: "Tabii Spor", logo: "https://images.seeklogo.com/logo-png/48/1/tabii-logo-png_seeklogo-481975.png", url: "https://kl9mr2vxw7nq5py1sh4tj3gb6.medya.trt.com.tr/master_1080p.m3u8" },
+    { name: "Tabii Spor 1", logo: "https://images.seeklogo.com/logo-png/48/1/tabii-logo-png_seeklogo-481975.png", url: "https://pz4qt7nw1mr9sh2vl5xk8jg3y.medya.trt.com.tr/master.m3u8" },
+    { name: "Tabii Spor 2 ", logo: "https://images.seeklogo.com/logo-png/48/1/tabii-logo-png_seeklogo-481975.png", url: "https://mr8bv4kl1nq7sh9tw2xp5zj6g.medya.trt.com.tr/master_1440p.m3u8" },
+    { name: "Tabii Spor 3", logo: "https://images.seeklogo.com/logo-png/48/1/tabii-logo-png_seeklogo-481975.png", url: "https://mR4vL7nQ2sH9tW5xP1zK3gJ8b.medya.trt.com.tr/master.m3u8" },
+    { name: "TRT Spor", logo: "https://trgooltv61.top/img/trtspornew.png", url: "https://tv-trtspor1.medya.trt.com.tr/master.m3u8" },
     { name: "TRT Spor Yıldız", logo: "https://spormeydani.org/wp-content/uploads/2021/05/TRT_Spor_Star_Landscape_on_Light_6000x3000.png", url: "https://tv-trtspor2.medya.trt.com.tr/master.m3u8" },
     { name: "Trt 1", logo: "https://images.seeklogo.com/logo-png/26/2/trt-1-logo-png_seeklogo-260967.png", url: "https://tv-trt1.medya.trt.com.tr/master.m3u8" },
     { name: "Atv", logo: "https://iatv.tmgrup.com.tr/site/v2/i/atv-logo.png", url: "https://trkvz.daioncdn.net/atv/atv.m3u8?ce=3&app=d1ce2d40-5256-4550-b02e-e73c185a314e&st=Z6CX80tIdZAkt5Z0jDtziQ&e=1774009917&ppid=a78162fd54f80e6de01ef6123db2f50a" },
-    { name: "A Spor (1080p)", logo: "https://www.trgoals124.top/lib/img/channels/a-spor.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/a-spor.m3u8" }
+    { name: "A Spor (1080p)", logo: "https://trgooltv61.top/img/aspornew.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/a-spor.m3u8" }
 ];
 
 function renderChannels(filter = "") {
