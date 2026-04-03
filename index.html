@@ -1,89 +1,113 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-RNVVJ5986D"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', 'G-RNVVJ5986D');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FATBOK TV - CREXOWW</title>
-    
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css" />
-    
+    <title>FATBOK TV | Canlı Yayın</title>
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        /* Player kutularının Plyr ile uyumlu olması için ek stil */
-        .plyr { height: 100%; width: 100%; border-radius: inherit; }
-        #players { min-height: 400px; } /* Boşken çökmemesi için */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #05070b;
+            font-family: 'Rubik', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            color: white;
+            overflow: hidden;
+        }
+
+        .player-container {
+            width: 90%;
+            max-width: 1000px;
+            background: #111215;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 1px solid #222;
+        }
+
+        .header {
+            padding: 15px;
+            background: #1a1b1f;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .status {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #ff0000;
+            font-weight: bold;
+        }
+
+        .status-dot {
+            height: 8px;
+            width: 8px;
+            background-color: #ff0000;
+            border-radius: 50%;
+            margin-right: 8px;
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+            0% { opacity: 1; }
+            50% { opacity: 0.3; }
+            100% { opacity: 1; }
+        }
+
+        .iframe-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            background: #000;
+        }
+
+        iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .footer {
+            padding: 10px;
+            text-align: center;
+            font-size: 12px;
+            color: #666;
+        }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar" id="sidebar">
-        <div class="header">FATBOK<span>TV</span></div>
-        
-        <div class="search-box">
-            <input type="text" id="search" placeholder="Kanal ara..." autocomplete="off">
+<div class="player-container">
+    <div class="header">
+        <span>BeIN Sports 1 - FATBOK TV</span>
+        <div class="status">
+            <div class="status-dot"></div> CANLI YAYIN
         </div>
+    </div>
 
-        <div id="channels"></div>
+    <div class="iframe-wrapper">
+        <iframe 
+            src="https://24taraftarium9.xyz/player.php?id=b1&ch=b1" 
+            referrerpolicy="no-referrer-when-downgrade"
+            allow="autoplay; encrypted-media" 
+            allowfullscreen 
+            scrolling="no">
+        </iframe>
+    </div>
 
-        <div class="sidebar-footer" style="margin-top: auto; padding: 15px 10px; background: #111; border-top: 1px solid rgba(255,255,255,0.1); position: sticky; bottom: 0;">
-            <a href="mailto:fatboktvreklam@proton.me" 
-               style="display: flex; align-items: center; justify-content: center; text-decoration: none; color: #00ff00; font-size: 12px; font-weight: bold; background: rgba(0, 255, 0, 0.1); padding: 10px; border-radius: 8px; border: 1px solid rgba(0, 255, 0, 0.3); transition: 0.3s; width: 100%; box-sizing: border-box;">
-                <i class="fas fa-envelope-open-text" style="margin-right: 8px;"></i>
-                <span>Reklam & Sponsorluk</span>
-            </a>
-        </div>
-    </nav>
+    <div class="footer">
+        © 2026 FATBOK TV - Kesintisiz Yayın Deneyimi
+    </div>
+</div>
 
-    <button class="toggle-btn" id="sidebar-toggle" onclick="toggleSidebar()" aria-label="Menü Değiştir">◀</button>
-
-    <main class="main-content">
-        <header class="layout-header">
-            <div class="status">
-                <span class="live-indicator">● CANLI</span>
-                <span id="current-channel">Yayın Merkezi</span>
-            </div>
-
-            <div class="layout-buttons">
-                <button onclick="setLayout(1)" class="layout-btn">1'li</button>
-                <button onclick="setLayout(2)" class="layout-btn">2'li</button>
-                <button onclick="setLayout(4)" class="layout-btn">4'lü</button>
-                <button onclick="toggleCinemaMode()" id="cinema-btn" class="special-btn">Sinema Modu</button>
-            </div>
-        </header>
-
-        <div class="top-ad-bar" style="background: rgba(0, 255, 0, 0.05); border: 1px solid rgba(0, 255, 0, 0.2); padding: 6px 15px; margin: 8px 15px 2px 15px; border-radius: 6px;">
-            <a href="mailto:fatboktvreklam@proton.me" 
-               style="text-decoration: none; color: #00ff00; display: flex; justify-content: center; align-items: center; gap: 10px; font-size: 12px; font-weight: 700;">
-                <i class="fas fa-handshake"></i>
-                <span>REKLAM VE SPONSORLUK:</span>
-                <span style="color: #fff; background: rgba(0, 255, 0, 0.15); padding: 2px 8px; border-radius: 4px; font-family: monospace;">fatboktvreklam@proton.me</span>
-            </a>
-        </div>
-
-        <div id="players">
-            <div class="welcome-msg">
-                <div class="msg-content">
-                    <span>Lütfen izlemek istediğiniz kanalı soldaki menüden seçiniz.</span>
-                </div>
-            </div>
-        </div>
-    </main>
-
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-    <script src="https://cdn.plyr.io/3.7.8/plyr.polyfilled.js"></script>
-    
-    <script src="script.js"></script>
 </body>
 </html>
