@@ -3,111 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FATBOK TV | Canlı Yayın</title>
+    <title>FATBOK TV | Kesintisiz Canlı Yayın</title>
+    <link href="https://vjs.zencdn.net/8.10.0/video-js.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;700&display=swap" rel="stylesheet">
+    
     <style>
+        :root {
+            --ana-renk: #05070b;
+            --vurgu-renk: #ff7b00;
+            --panel-renk: #111215;
+        }
+
         body {
+            background-color: var(--ana-renk);
+            color: #ffffff;
+            font-family: 'Rubik', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #05070b;
-            font-family: 'Rubik', sans-serif;
             display: flex;
+            flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
-            height: 100vh;
-            color: white;
-            overflow: hidden;
+            min-height: 100vh;
         }
 
-        .player-container {
-            width: 90%;
-            max-width: 1000px;
-            background: #111215;
-            border-radius: 12px;
+        /* Video Paneli Konteyneri */
+        .player-wrapper {
+            width: 95%;
+            max-width: 1100px;
+            background: var(--panel-renk);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 1px solid #222;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            border: 1px solid #1f2126;
         }
 
-        .header {
-            padding: 15px;
-            background: #1a1b1f;
+        /* Başlık Alanı */
+        .player-header {
+            padding: 20px;
+            background: linear-gradient(90deg, #16171b 0%, #111215 100%);
             display: flex;
-            align-items: center;
             justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #222;
         }
 
-        .status {
+        .channel-info {
             display: flex;
             align-items: center;
-            font-size: 14px;
-            color: #ff0000;
+            gap: 12px;
+        }
+
+        .live-tag {
+            background: #ff0000;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 11px;
             font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            animation: pulse 1.5s infinite;
         }
 
-        .status-dot {
-            height: 8px;
-            width: 8px;
-            background-color: #ff0000;
-            border-radius: 50%;
-            margin-right: 8px;
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
+        @keyframes pulse {
             0% { opacity: 1; }
-            50% { opacity: 0.3; }
+            50% { opacity: 0.5; }
             100% { opacity: 1; }
         }
 
-        .iframe-wrapper {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
-            height: 0;
-            background: #000;
-        }
-
-        iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
+        /* Oynatıcı Alanı */
+        .video-js {
             width: 100%;
-            height: 100%;
-            border: none;
+            aspect-ratio: 16 / 9;
+            background-color: #000;
         }
 
-        .footer {
-            padding: 10px;
-            text-align: center;
-            font-size: 12px;
-            color: #666;
+        /* Kanal Listesi (Alt Kısım) */
+        .channel-list {
+            padding: 15px;
+            display: flex;
+            gap: 10px;
+            overflow-x: auto;
+            background: #0d0e12;
+        }
+
+        .channel-btn {
+            background: #1c1e24;
+            border: 1px solid #333;
+            color: #aaa;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: 0.3s;
+            white-space: nowrap;
+        }
+
+        .channel-btn:hover, .channel-btn.active {
+            background: var(--vurgu-renk);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--vurgu-renk);
+        }
+
+        /* Sağ Tık Engelleme Mesajı (Opsiyonel) */
+        #alert-box {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            background: red;
+            padding: 10px 20px;
+            border-radius: 5px;
+            z-index: 9999;
         }
     </style>
 </head>
-<body>
-
-<div class="player-container">
-    <div class="header">
-        <span>BeIN Sports 1 - FATBOK TV</span>
-        <div class="status">
-            <div class="status-dot"></div> CANLI YAYIN
+<body oncontextmenu="return false;"> <div class="player-wrapper">
+    <div class="player-header">
+        <div class="channel-info">
+            <span class="live-tag">CANLI</span>
+            <span style="font-weight: bold; font-size: 18px;">BeIN Sports 1 HD</span>
         </div>
+        <div style="color: #666; font-size: 13px;">FATBOK TV v3.0</div>
     </div>
 
-    <div class="iframe-wrapper">
-        <iframe 
-            src="https://24taraftarium9.xyz/player.php?id=b1&ch=b1" 
-            referrerpolicy="no-referrer-when-downgrade"
-            allow="autoplay; encrypted-media" 
-            allowfullscreen 
-            scrolling="no">
-        </iframe>
-    </div>
+    <video id="my-video" class="video-js vjs-big-play-centered" controls preload="auto" poster="https://static.beinconnect.com.tr/beinsports_logo.png">
+        <source src="https://HEDEFSITE.xyz/hls/b1.m3u8" type="application/x-mpegURL">
+        <p class="vjs-no-js">Bu videoyu izlemek için tarayıcınızın JavaScript'i desteklemesi gerekir.</p>
+    </video>
 
-    <div class="footer">
-        © 2026 FATBOK TV - Kesintisiz Yayın Deneyimi
+    <div class="channel-list">
+        <button class="channel-btn active">BEIN SPORTS 1</button>
+        <button class="channel-btn">BEIN SPORTS 2</button>
+        <button class="channel-btn">BEIN SPORTS 3</button>
+        <button class="channel-btn">EXXEN SPOR</button>
+        <button class="channel-btn">TABİİ SPOR</button>
     </div>
 </div>
+
+<script src="https://vjs.zencdn.net/8.10.0/video.min.js"></script>
+<script>
+    // Oynatıcıyı Başlat
+    var player = videojs('my-video');
+    player.fluid(true); // Otomatik boyutlandırma
+
+    // Güvenlik: F12 ve Sağ Tık Engelleme (Senin istediğin gibi)
+    document.onkeydown = function(e) {
+        if(event.keyCode == 123) return false; // F12
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false; // Ctrl+Shift+I
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false; // Ctrl+Shift+C
+        if(e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false; // Ctrl+Shift+J
+        if(e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
+    };
+</script>
 
 </body>
 </html>
