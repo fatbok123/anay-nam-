@@ -33,9 +33,12 @@ function switchTab(tabId) {
 
 // MAÇ VERİLERİ VE TIKLAMA ÖZELLİĞİ (GÜNCELLENDİ)
 const matches = [
-    { time: "20:00", teams: "Fenerbahçe - Galatasaray", channel: "Bein Sports 1" },
-    { time: "22:00", teams: "Real Madrid - Man. City", channel: "Tabii Spor" },
-    { time: "21:45", teams: "Inter - AC Milan", channel: "S Sport" }
+    { time: "20:00", teams: "Manchester City - Liverpool", channel: "Tabii Spor" },
+    { time: "22:00", teams: "trabonspor - Galatasaray", channel: "Bein Sports 1" },
+    { time: "21:45", teams: "Gençlerbirliği - Göztepe", channel: "Bein Sports 2" },
+    { time: "22:00", teams: "Kasımpaşa - Kayserispor", channel: "Bein Sports 3" },
+    { time: "22:00", teams: "Sassuolo - Cagliari", channel: "S Sport 2" },
+    { time: "22:00", teams: "Erzurumspor - Iğdır FK", channel: "TRT Spor" }
 ];
 
 function renderMatches() {
