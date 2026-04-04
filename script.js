@@ -16,28 +16,26 @@ let players = [];
 let hlsInstances = []; 
 let playerInfos = [];
 
-// --- SEKMELER ARASI GEÇİŞ (YENİ ÖZELLİK) ---
+// --- SEKMELER ARASI GEÇİŞ ---
 function switchTab(tabId) {
-    // Tüm içerikleri gizle
     document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
-    // Tüm buton pasif yap
     document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
     
-    // Seçileni göster
     document.getElementById(tabId).classList.add('active');
     
-    // Tıklanan butonu aktif yap (ID üzerinden kontrol)
     if(tabId === 'channels-content') {
         document.getElementById('tab-channels-btn').classList.add('active');
     } else {
         document.getElementById('tab-matches-btn').classList.add('active');
-        renderMatches(); // Maçlar sekmesine geçince listeyi yenile
+        renderMatches(); 
     }
 }
 
-// MAÇ VERİLERİ VE RENDER (YENİ ÖZELLİK)
+// MAÇ VERİLERİ VE TIKLAMA ÖZELLİĞİ (GÜNCELLENDİ)
 const matches = [
-    { time: "Yükleniyor", teams: "Maçlar Güncelleniyor...", url: "" }
+    { time: "20:00", teams: "Fenerbahçe - Galatasaray", channel: "Bein Sports 1" },
+    { time: "22:00", teams: "Real Madrid - Man. City", channel: "Tabii Spor" },
+    { time: "21:45", teams: "Inter - AC Milan", channel: "S Sport" }
 ];
 
 function renderMatches() {
@@ -45,17 +43,24 @@ function renderMatches() {
     if(!list) return;
     list.innerHTML = "";
     
-    // Buraya örnek maçlar ekliyorum, sen burayı güncelleyebilirsin
-    const bugunkuMaclar = [
-        { time: "20:00", teams: "Fenerbahçe - Galatasaray", channel: "Bein Sports 1" },
-        { time: "22:00", teams: "Real Madrid - Man. City", channel: "Tabii Spor" }
-    ];
-
-    bugunkuMaclar.forEach(m => {
+    matches.forEach(m => {
         const div = document.createElement("div");
         div.className = "match-item";
+        
+        // TIKLAMA ÖZELLİĞİ: Listedeki maça basınca yayını açar
+        div.onclick = () => {
+            const targetChannel = channels.find(c => c.name === m.channel);
+            if (targetChannel) {
+                playStream(targetChannel.url, targetChannel.name);
+                // Mobildeyse menüyü kapat
+                if(window.innerWidth <= 768) toggleSidebar();
+            } else {
+                alert("Kanal bulunamadı! Kanal isminin channels listesiyle aynı olduğundan emin olun.");
+            }
+        };
+
         div.innerHTML = `
-            <div style="display:flex; justify-content:between; align-items:center;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
                 <span style="color:var(--accent); font-weight:800; margin-right:10px;">${m.time}</span>
                 <span style="flex-grow:1; font-size:13px;">${m.teams}</span>
             </div>
@@ -73,7 +78,7 @@ function toggleSidebar() {
     toggleBtn.innerText = sidebar.classList.contains("collapsed") ? "▶" : "◀";
 }
 
-// "IŞIKLARI KAPAT" ÖZELLİĞİ (GELİŞMİŞ SİNEMA MODU)
+// "IŞIKLARI KAPAT" ÖZELLİĞİ
 function toggleCinemaMode() {
     const isCinema = document.body.classList.toggle("cinema-mode");
     const sidebar = document.getElementById("sidebar");
@@ -249,7 +254,7 @@ function setLayout(count) {
     createPlayers(count); 
 }
 
-// KANAL VERİLERİ (Aynen korundu)
+// KANAL VERİLERİ
 const channels = [
     { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
     { name: "Bein Sports 1 (B)", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://curly-fire-b7a1.bestlivever.workers.dev/watch/chunk/yayinz.m3u8" },
@@ -277,7 +282,7 @@ const channels = [
     { name: "Smartspor", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Smart-spor_635084424044881793.png", url: "https://macizletaraftarium.online/ch?id=smarts" },
     { name: "Smartspor 2", logo: "https://upload.wikimedia.org/wikipedia/commons/b/b5/Smart-spor_635084424044881793.png", url: "https://macizletaraftarium.online/ch?id=sms2" },
     { name: "Eurosport 1", logo: "https://w7.pngwing.com/pngs/113/118/png-transparent-eurosport-2-logo-television-eurosport-1-sport1-television-blue-text.png", url: "https://macizletaraftarium.online/ch?id=eu1" },
-    { name: "Eurosport 1", logo: "https://w7.pngwing.com/pngs/113/118/png-transparent-eurosport-2-logo-television-eurosport-1-sport1-television-blue-text.png", url: "https://macizletaraftarium.online/ch?id=eu2" },
+    { name: "Eurosport 2", logo: "https://w7.pngwing.com/pngs/113/118/png-transparent-eurosport-2-logo-television-eurosport-1-sport1-television-blue-text.png", url: "https://macizletaraftarium.online/ch?id=eu2" },
     { name: "TRT Spor Yıldız", logo: "https://spormeydani.org/wp-content/uploads/2021/05/TRT_Spor_Star_Landscape_on_Light_6000x3000.png", url: "https://tv-trtspor2.medya.trt.com.tr/master.m3u8" },
     { name: "Trt 1", logo: "https://images.seeklogo.com/logo-png/26/2/trt-1-logo-png_seeklogo-260967.png", url: "https://macizletaraftarium.online/ch?id=trt1" },
     { name: "Atv", logo: "https://iatv.tmgrup.com.tr/site/v2/i/atv-logo.png", url: "https://macizletaraftarium.online/ch?id=atv" },
