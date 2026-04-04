@@ -259,7 +259,7 @@ function setLayout(count) {
 
 // KANAL VERİLERİ
 const channels = [
-    { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://hlsssssss.ercansov.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-1.m3u8" },
+    { name: "Bein Sports 1", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://x.com/i/broadcasts/1RJjpzoOoBRKw" },
     { name: "Bein Sports 1 (B)", logo: "https://trgooltv61.top/img/beinsports1.png", url: "https://curly-fire-b7a1.bestlivever.workers.dev/watch/chunk/yayinz.m3u8" },
     { name: "Bein Sports 2", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://noisy-cake-8ebc.travestigamzes.workers.dev/https://corestream.ronaldovurdu.help//hls/bein-sports-2.m3u8" },
     { name: "Bein Sports 2 (B)", logo: "https://trgooltv61.top/img/beinsports2.png", url: "https://macizletaraftarium.online/ch?id=b2" },
